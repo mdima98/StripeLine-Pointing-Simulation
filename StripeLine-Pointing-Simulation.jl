@@ -5,9 +5,9 @@ using ArgParse
 
 
 # =========================
-# This code performs a simulation for a single polarimeter of the Stripeline pipeline,
+# This code is meant to perform a simulation for a single polarimeter of the Stripeline pipeline,
 # to study the pointing error distribution when there are non idealities in the telescope.
-# It should be used with GNU parallel to perform compelte simualtion of 2 yrs and all 49 polarimeters
+# It should be used with GNU parallel to perform complete simulations of 2 yrs and all 49 polarimeters.
 # =========================
 
 
@@ -16,12 +16,12 @@ function parse_commandline()
 
     @add_arg_table s begin
 
-        "start-day"
-            help = "The starting day of the simualtion."
+        "start_day"
+            help = "The starting day of the simulation."
             arg_type = Int
             required = true
 
-        "lenght"
+        "length"
             help = "How many days the simulation will last."
             arg_type = Int
             required = true
@@ -36,13 +36,26 @@ function parse_commandline()
 end
 
 function main()
-    parsed_args = parse_commandline()
-    println("All clear!")
 
-    println("Parsed args:")
-    for (arg,val) in parsed_args
-        println("  $arg  =>  $val")
-    end
+    parsed_args = parse_commandline()
+
+    # Simualtion parameters 
+    start_day = parsed_args["start_day"]
+    length = parsed_args["length"]
+    end_day = start_day + length
+    pol_name = parsed_args["polarimeter"]
+
+
+    db = Stripeline.InstrumentDB()
+    pol_or = db.focalplane[pol_name].orientation
+
+    fsamp_hz = 50
+    τ_s = 1 / fsamp_hz
+
+    println("Simulating polarimeter $(pol_name) from day $(start_day) to day $(end_day)")
+
+
+
 end
 
 main()
