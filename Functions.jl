@@ -2,14 +2,7 @@ import Stripeline
 
 using Printf
 using ArgParse
-using AstroLib, Dates
-
-
-# =========================
-# This code is meant to perform a simulation for a single polarimeter of the Stripeline pipeline,
-# to study the pointing error distribution when there are non idealities in the telescope.
-# It should be used with GNU parallel to perform complete simulations of 2 yrs and all 49 polarimeters.
-# =========================
+# using AstroLib, Dates
 
 
 function parse_commandline()
@@ -38,14 +31,14 @@ end
 
 function make_histogram(θ, nbins)
     
-    H =zeros(Float64, nbins, 2)
-    step = θ / nbins
+    H = zeros(Float64, 2, nbins)
+    step = 4*θ / nbins
 
     for i in range(1,nbins)
-        H[i,2] = -2*θ + (2*i - 1)/2 * step
+        H[2,i] = -2*θ + (2*i - 1)/2 * step
     end
 
-    return H, step
+    return (H, step)
 
 end
 
@@ -57,12 +50,12 @@ function fill_histogram!(H, nbins, step, point_errs)
 
         count = 0
         while true
-            j = ceil(length(H[:,2]) / 2)
-            rbin = H[j, 2] + step
-            lbin = H[j,2] - step
+            j = ceil(length(H[2,:]) / 2)
+            rbin = H[2,j] + step
+            lbin = H[2,j] - step
 
             if lbin < point_errs[i] < rbin
-                H[i,1]+=1
+                H[1,i]+=1
                 break
             elseif point_errs[i] > rbin 
                 j += ceil(j/2)
@@ -76,30 +69,6 @@ function fill_histogram!(H, nbins, step, point_errs)
 
 
 end
-
-function main()
-
-    parsed_args = parse_commandline()
-
-    # Simulation parameters 
-    start_day = parsed_args["start_day"]
-    length = parsed_args["length"]
-    pol_name = parsed_args["polarimeter"]
-
-
-    db = Stripeline.InstrumentDB()
-    pol_or = db.focalplane[pol_name].orientation
-
-    fsamp_hz = 50
-    τ_s = 1 / fsamp_hz
-
-    println("Simulating polarimeter $(pol_name) from day $(start_day) to day $(start_day+length)")
-
-
-
-end
-
-main()
 
 
 
