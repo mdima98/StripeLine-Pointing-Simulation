@@ -1,7 +1,5 @@
+include("StripeLine-Pointing-Simulation.jl")
 using Test
-
-include("Functions.jl")
-
 
 @testset "StripeLine-Pointing-Simulation.jl Tests" begin
     
@@ -19,7 +17,8 @@ include("Functions.jl")
             @test H == H_t
             @test step == step_t
 
-            
+
+        
 
 
         end
