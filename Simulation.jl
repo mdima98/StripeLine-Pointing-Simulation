@@ -25,6 +25,7 @@ function main()
 
     println("Simulating polarimeter $(pol_name) from day $(start_day) to day $(start_day+length)")
 
+    
 
 
 end
