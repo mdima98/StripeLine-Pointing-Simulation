@@ -42,7 +42,7 @@ function make_histogram(θ, nbins)
 
 end
 
-function fill_histogram!(H, nbins, step, point_errs)
+function fill_histogram!(H, step, point_errs)
 
     outliers = 0
 
@@ -73,7 +73,17 @@ function fill_histogram!(H, nbins, step, point_errs)
     return outliers
 end
 
+function print_histogram(H, step, outliers, fname, dname)
 
+    fpath = joinpath(dname, fname)
+
+    open(fpath, "w") do file
+        @printf(file, "%u\t%u\t%u\n", length(H[2,:]), step, outliers)
+        for i in range(1, length(H[2,:]))
+            @printf(file, "%u\t%.5f\n", H[1,i], H[2,i])
+        end
+    end
+end
 
 # time_range = 0 : τ_s : (total_time_s - τ_s)
 # telescope_motors(time_s) = (0.0, deg2rad(20.0), Stripeline.timetorotang(time_s, 1.))
