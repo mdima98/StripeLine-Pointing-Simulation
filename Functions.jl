@@ -44,32 +44,34 @@ end
 
 function fill_histogram!(H, nbins, step, point_errs)
 
-    θ = step * nbins
+    outliers = 0
 
     for i in range(1, length(point_errs))
+        
+        jl = 1
+        jr = length(H[2,:])
+        outliers += 1
 
-        count = 0
-        while true
-            j = ceil(length(H[2,:]) / 2)
-            rbin = H[2,j] + step
-            lbin = H[2,j] - step
+        while jl <= jr
 
-            if lbin < point_errs[i] < rbin
-                H[1,i]+=1
+            jm = jl + (jr-jl) ÷ 2
+            lbin = H[2,jm] - step/2.
+            rbin = H[2,jm] + step/2.
+
+            if lbin <= point_errs[i] < rbin
+                H[1,jm] += 1
+                outliers -= 1
                 break
-            elseif point_errs[i] > rbin 
-                j += ceil(j/2)
-            else # If number is equal, is in lbin
-                j = ceil(j/2)
+            elseif rbin <= point_errs[i]
+                jl = jm + 1
+            else
+                jr = jm - 1
             end
-            count+=1
-            count != nbins / 2 || break
         end
     end
 
-
+    return outliers
 end
-
 
 
 
