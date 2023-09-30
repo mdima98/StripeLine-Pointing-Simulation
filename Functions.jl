@@ -85,36 +85,42 @@ function print_histogram(H, step, outliers, fname, dname)
     end
 end
 
-# time_range = 0 : τ_s : (total_time_s - τ_s)
-# telescope_motors(time_s) = (0.0, deg2rad(20.0), Stripeline.timetorotang(time_s, 1.))
-
-# (dirs, ψ) = Stripeline.genpointings(
-#     telescope_motors,
-#     [0., 0., 1.],
-#     time_range;
-#     config_ang = nothing
-# )
+function telescope_motors(time_s)
+   return  (0.0, deg2rad(20.0), Stripeline.timetorotang(time_s, 1.))
+end
 
 
-# config_ang = Stripeline.configuration_angles(
-#     wheel1ang_0_rad  = deg2rad(0),
-#     wheel2ang_0_rad  = deg2rad(0),
-#     wheel3ang_0_rad  = deg2rad(2.),
-#     forkang_rad  = deg2rad(0),
-#     omegaVAXang_rad  = deg2rad(0),
-#     zVAXang_rad  = deg2rad(0),
-#     panang_rad  = deg2rad(0),
-#     tiltang_rad  = deg2rad(0),
-#     rollang_rad  = deg2rad(0)  
-# ) 
+function simulate_pointing(H, step, nbins, τ_s, config_ang, pol_or, first_day, last_day, dirname)
+    
+    sim_days = first_day : Dates.Day(1) : last_day
+    
+
+    for day in sim_days
+
+        total_time_s = 3600.0 * 24.0
+        time_range = 0 : τ_s : (total_time_s - τ_s)      
+
+        dirs_ideal, _ = Stripeline.genpointings(
+            telescope_motors,
+            pol_or,
+            time_range,
+            day;
+            config_ang = nothing
+        )
+        
+        dirs_real, _ = Stripeline.genpointings(
+            telescope_motors,
+            pol_or,
+            time_range,
+            day;
+            config_ang = config_ang
+        )
+
+    end
 
 
-# (dirs_config, ψ_config) = Stripeline.genpointings(
-#     telescope_motors,
-#     [0., 0., 1.],
-#     time_range;
-#     config_ang = config_ang 
-# )
+end
+
 
 # point_err = acos.(  sin.(dirs[:,1]) .* cos.(dirs[:,2]) .* sin.(dirs_config[:,1]) .* cos.(dirs_config[:,2]) .+
 # sin.(dirs[:,1]) .* sin.(dirs[:,2]) .* sin.(dirs_config[:,1]) .* sin.(dirs_config[:,2]) .+
