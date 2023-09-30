@@ -89,6 +89,15 @@ function telescope_motors(time_s)
    return  (0.0, deg2rad(20.0), Stripeline.timetorotang(time_s, 1.))
 end
 
+function compute_point_err(dirs_ideal, dirs_real)
+    point_err = acosd.(  sin.(dirs_ideal[:,1]) .* cos.(dirs_ideal[:,2]) .* sin.(dirs_real[:,1]) .* cos.(dirs_real[:,2]) .+
+                        sin.(dirs_ideal[:,1]) .* sin.(dirs_ideal[:,2]) .* sin.(dirs_real[:,1]) .* sin.(dirs_real[:,2]) .+
+                        cos.(dirs_ideal[:,1]) .* cos.(dirs_real[:,1])
+    )
+
+    return point_err
+end
+
 
 function simulate_pointing(H, step, nbins, τ_s, config_ang, pol_or, first_day, last_day, dirname)
     
@@ -120,8 +129,3 @@ function simulate_pointing(H, step, nbins, τ_s, config_ang, pol_or, first_day, 
 
 
 end
-
-
-# point_err = acos.(  sin.(dirs[:,1]) .* cos.(dirs[:,2]) .* sin.(dirs_config[:,1]) .* cos.(dirs_config[:,2]) .+
-# sin.(dirs[:,1]) .* sin.(dirs[:,2]) .* sin.(dirs_config[:,1]) .* sin.(dirs_config[:,2]) .+
-# cos.(dirs[:,1]) .* cos.(dirs_config[:,1])) .* 3437.75 # Converts to arcmin

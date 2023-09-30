@@ -37,4 +37,32 @@ using Random
         end
 
 
+        @testset "Pointing Tests" begin
+
+            dirsz = [0. 0.]
+            dirsy = [deg2rad(90.0) deg2rad(90.0)]
+
+            point_err_zy_t = compute_point_err(dirsz, dirsy)
+            point_err_zz_t = compute_point_err(dirsz, dirsz)
+
+            @test point_err_zy_t[1] ≈ 90.0
+            @test point_err_zz_t[1] ≈ 0.0
+
+
+            B = [deg2rad(90.0-42.75) deg2rad(56.31)]
+            C = [deg2rad(90.0-68) deg2rad(225.)]
+
+            point_err_BC_t = compute_point_err(B,C)
+
+            @test point_err_BC_t[1] ≈ 68.92234
+
+
+            
+
+
+
+
+        end
+
+
 end
