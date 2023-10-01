@@ -43,14 +43,9 @@ function main()
     # Set histogram
     (H, step) = make_histogram(θ, nbins)
 
-    # Set starting day
-    dt = DateTime(2024, 01, 01, 15, 0, 0)
-    first_day = dt + Dates.Day(start_day)
-    last_day = first_day + Dates.Day(ndays)
-
     dirname = raw"hist_tests/"
 
-
+    
     
 
 

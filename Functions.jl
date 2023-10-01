@@ -73,9 +73,7 @@ function fill_histogram!(H, step, point_errs)
     return outliers
 end
 
-function print_histogram(H, step, outliers, fname, dname)
-
-    fpath = joinpath(dname, fname)
+function print_histogram(H, step, outliers, fpath)
 
     open(fpath, "w") do file
         @printf(file, "%u\t%u\t%u\n", length(H[2,:]), step, outliers)
@@ -98,12 +96,30 @@ function compute_point_err(dirs_ideal, dirs_real)
     return point_err
 end
 
-
-function simulate_pointing(H, step, nbins, τ_s, config_ang, pol_or, first_day, last_day, dirname)
+function set_sim_dir(dirname, pol_name)
     
+    dirpath = joinpath(dirname,pol_name)
+    
+    if ispath(dirpath)
+        return dirpath
+    else
+        fpath = mkpath(dirpath)
+        return fpath
+    end
+end
+
+
+function simulate_pointing(H, step, τ_s, config_ang, pol_or, start_day, ndays, pol_name, dirname)
+    
+    # Set starting day
+    dt = DateTime(2024, 01, 01, 15, 0, 0)
+    first_day = dt + Dates.Day(start_day)
+    last_day = first_day + Dates.Day(ndays)
     sim_days = first_day : Dates.Day(1) : last_day
     
-
+    outliers = 0
+    
+    # Simulate pointing for each day, compute error and make hist
     for day in sim_days
 
         total_time_s = 3600.0 * 24.0
@@ -125,7 +141,14 @@ function simulate_pointing(H, step, nbins, τ_s, config_ang, pol_or, first_day, 
             config_ang = config_ang
         )
 
+        point_err = compute_point_err(dirs_ideal, dirs_real)
+        outliers += fill_histogram!(H, step, point_err)
     end
 
+    # Save hist to file
+    sim_dir = set_sim_dir(dirname, pol_name)
+    fname = "hist_$(pol_name)_$(start_day)_$(start_day+ndays).hist"
+    fpath = joinpath(sim_dir, fname)
+    print_histogram(H,step, outliers, fpath)
 
 end

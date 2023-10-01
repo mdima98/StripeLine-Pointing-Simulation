@@ -55,9 +55,15 @@ using Random
             point_err_BC_t = compute_point_err(B,C)
 
             @test point_err_BC_t[1] ≈ 68.92234
+        end
 
 
+        @testset "Files saving Tests" begin
             
+            dirname = raw"hist_tests/"
+            pol_name = "I0"
+
+            @test ispath(set_sim_dir(dirname, pol_name))
 
 
 
