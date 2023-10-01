@@ -26,18 +26,18 @@ function main()
     τ_s = 1 / fsamp_hz
 
     nbins = 1000
-    θ = deg2rad(1/60.) # Non ideality
+    θ = 1. / 60. # Non ideality in degrees; cannot be zero
 
     config_ang = Stripeline.configuration_angles(
-    wheel1ang_0_rad  = 0.,
-    wheel2ang_0_rad  = θ,
-    wheel3ang_0_rad  = 0.,
-    forkang_rad  = 0.,
-    omegaVAXang_rad  = 0.,
-    zVAXang_rad  = 0.,
-    panang_rad  = 0.,
-    tiltang_rad  = 0.,
-    rollang_rad  = 0.  
+    wheel1ang_0_rad  = deg2rad(0.),
+    wheel2ang_0_rad  = deg2rad(θ),
+    wheel3ang_0_rad  = deg2rad(0.),
+    forkang_rad  = deg2rad(0.),
+    omegaVAXang_rad  = deg2rad(0.),
+    zVAXang_rad  = deg2rad(0.),
+    panang_rad  = deg2rad(0.),
+    tiltang_rad  = deg2rad(0.),
+    rollang_rad  = deg2rad(0.)  
     )
 
     # Set histogram
@@ -45,9 +45,8 @@ function main()
 
     dirname = raw"hist_tests/"
 
-    
-    
-
+    # Do simulation
+    simulate_pointing(H, step, τ_s, config_ang, pol_or, start_day, ndays, pol_name, dirname)
 
 end
 

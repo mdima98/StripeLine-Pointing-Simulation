@@ -32,7 +32,7 @@ end
 function make_histogram(θ, nbins)
     
     H = zeros(Float64, 2, nbins)
-    step = 4*θ / nbins
+    step = 4*θ / nbins  # Range of hist / nbins
 
     for i in range(1,nbins)
         H[2,i] = -2*θ + (2*i - 1)/2 * step
@@ -54,7 +54,7 @@ function fill_histogram!(H, step, point_errs)
 
         while jl <= jr
 
-            jm = jl + (jr-jl) ÷ 2
+            jm = jl + (jr-jl) ÷ 2 # Integer division
             lbin = H[2,jm] - step/2.
             rbin = H[2,jm] + step/2.
 
@@ -76,9 +76,9 @@ end
 function print_histogram(H, step, outliers, fpath)
 
     open(fpath, "w") do file
-        @printf(file, "%u\t%u\t%u\n", length(H[2,:]), step, outliers)
+        @printf(file, "%u\t%.10f\t%u\n", length(H[2,:]), step, outliers)
         for i in range(1, length(H[2,:]))
-            @printf(file, "%u\t%.5f\n", H[1,i], H[2,i])
+            @printf(file, "%u\t%.10f\n", H[1,i], H[2,i])
         end
     end
 end
