@@ -3,6 +3,7 @@ import Stripeline
 using Printf
 using ArgParse
 using AstroLib, Dates
+using Statistics
 
 
 function parse_commandline()
@@ -29,6 +30,13 @@ function parse_commandline()
     return parse_args(s)
 end
 
+# function bins_width(time_range)
+#     # Trying following Freedman-Diaconis rule
+#     nsamples = length(time_range) * ndays
+#     bin_width = nsamples^(-1. / 3.)
+#     return bin_width
+# end
+
 function make_histogram(θ, nbins)
     
     H = zeros(Float64, 2, nbins)
@@ -40,6 +48,19 @@ function make_histogram(θ, nbins)
 
     return (H, step)
 
+end
+
+
+function make_hist(nbins, err_min, err_max)
+
+    H = zeros(Float64, 2, nbins)
+    step = (err_max-err_min) / nbins
+
+    for i in range(1,nbins)
+        H[2,i] = err_min + (2*i - 1)/2 * step
+    end
+
+    return (H, step)
 end
 
 function fill_histogram!(H, step, point_errs)
@@ -73,7 +94,7 @@ function fill_histogram!(H, step, point_errs)
     return outliers
 end
 
-function print_histogram(H, step, outliers, fpath)
+function print_hist(H, step, outliers, fpath)
 
     open(fpath, "w") do file
         @printf(file, "%u\t%.10f\t%u\n", length(H[2,:]), step, outliers)
@@ -108,27 +129,67 @@ function set_sim_dir(dirname, pol_name)
     end
 end
 
+function rescaling(point_err)
 
-function simulate_pointing(H, step, τ_s, config_ang, pol_or, start_day, ndays, pol_name, dirname)
+    err_ave = mean(point_err)
+    point_err_rescaled = (point_err .- err_ave) ./ (1. / 3600.) # Resclaed over arsec
+    return point_err_rescaled
+
+end
+
+
+function set_first_hist!(first_day, time_range, pol_or, nbins, config_ang, outliers)
+
+    dirs_ideal, _ = Stripeline.genpointings(
+        telescope_motors,
+        pol_or,
+        time_range,
+        first_day;
+        config_ang = nothing
+    )
+        
+    dirs_real, _ = Stripeline.genpointings(
+        telescope_motors,
+        pol_or,
+        time_range,
+        first_day;
+        config_ang = config_ang
+    )
+
+    point_err = compute_point_err(dirs_ideal, dirs_real)
+    point_err = rescaling(point_err)
+
+    err_min = minimum(point_err)
+    err_max = maximum(point_err)
+
+    (H, step) = make_hist(nbins, err_min, err_max)
+    outliers += fill_histogram!(H, step, point_err)
+
+    return (H, step)
+end
+
+function simulate_pointing(nbins, τ_s, config_ang, pol_or, start_day, ndays, pol_name, dirname)
     
     # Set starting day
     dt = DateTime(2024, 01, 01, 15, 0, 0)
     first_day = dt + Dates.Day(start_day)
     last_day = first_day + Dates.Day(ndays)
-    sim_days = first_day : Dates.Day(1) : last_day
+    sim_days = (first_day+Dates.Day(1)) : Dates.Day(1) : last_day # From second day onwards
     
     outliers = 0
+
+    day_total_time_s = 3600.0 * 24.0
+    day_time_range = 0 : τ_s : (day_total_time_s - τ_s)
+
+    (H, step) = set_first_hist!(first_day, day_time_range, pol_or, nbins, config_ang, outliers)
     
     # Simulate pointing for each day, compute error and make hist
     for day in sim_days
 
-        total_time_s = 3600.0 * 24.0
-        time_range = 0 : τ_s : (total_time_s - τ_s)      
-
         dirs_ideal, _ = Stripeline.genpointings(
             telescope_motors,
             pol_or,
-            time_range,
+            day_time_range,
             day;
             config_ang = nothing
         )
@@ -136,12 +197,13 @@ function simulate_pointing(H, step, τ_s, config_ang, pol_or, start_day, ndays, 
         dirs_real, _ = Stripeline.genpointings(
             telescope_motors,
             pol_or,
-            time_range,
+            day_time_range,
             day;
             config_ang = config_ang
         )
 
         point_err = compute_point_err(dirs_ideal, dirs_real)
+        point_err = rescaling(point_err)
         outliers += fill_histogram!(H, step, point_err)
     end
 
@@ -149,6 +211,6 @@ function simulate_pointing(H, step, τ_s, config_ang, pol_or, start_day, ndays, 
     sim_dir = set_sim_dir(dirname, pol_name)
     fname = "hist_$(pol_name)_$(start_day)_$(start_day+ndays).hist"
     fpath = joinpath(sim_dir, fname)
-    print_histogram(H,step, outliers, fpath)
+    print_hist(H,step, outliers, fpath)
 
 end

@@ -31,7 +31,7 @@ using Random
             @test outliers_t == 2
 
 
-            # print_histogram(H_t, step_t, outliers_t, "hist_tests.dat", "hist_tests/")
+            # print_hist(H_t, step_t, outliers_t, "hist_tests.dat", "hist_tests/")
 
 
         end
