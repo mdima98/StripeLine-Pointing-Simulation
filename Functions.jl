@@ -157,7 +157,8 @@ function set_first_hist!(first_day, time_range, pol_or, nbins, config_ang, outli
     )
 
     point_err = compute_point_err(dirs_ideal, dirs_real)
-    point_err = rescaling(point_err)
+    point_err ./ (1 / 3600.) # scaled to arcsec
+    # point_err = rescaling(point_err)
 
     err_min = minimum(point_err)
     err_max = maximum(point_err)
@@ -175,11 +176,16 @@ function simulate_pointing(nbins, τ_s, config_ang, pol_or, start_day, ndays, po
     first_day = dt + Dates.Day(start_day)
     last_day = first_day + Dates.Day(ndays)
     sim_days = (first_day+Dates.Day(1)) : Dates.Day(1) : last_day # From second day onwards
+    # sim_days = first_day : Dates.Day(1) : last_day
     
     outliers = 0
 
     day_total_time_s = 3600.0 * 24.0
     day_time_range = 0 : τ_s : (day_total_time_s - τ_s)
+
+    err_min = -0.5  # arcsec
+    err_max = -0.5  # arcsec
+    # (H, step) = make_hist(nbins, err_min, err_max)
 
     (H, step) = set_first_hist!(first_day, day_time_range, pol_or, nbins, config_ang, outliers)
     
@@ -203,7 +209,8 @@ function simulate_pointing(nbins, τ_s, config_ang, pol_or, start_day, ndays, po
         )
 
         point_err = compute_point_err(dirs_ideal, dirs_real)
-        point_err = rescaling(point_err)
+        # point_err = rescaling(point_err)
+        point_err ./ (1 / 3600.) # scaled to arcsec
         outliers += fill_histogram!(H, step, point_err)
     end
 

@@ -32,7 +32,7 @@ function main()
     wheel1ang_0_rad  = deg2rad(0.),
     wheel2ang_0_rad  = deg2rad(θ),
     wheel3ang_0_rad  = deg2rad(0.),
-    forkang_rad  = deg2rad(0.),
+    forkang_rad  = deg2rad(θ),
     omegaVAXang_rad  = deg2rad(0.),
     zVAXang_rad  = deg2rad(0.),
     panang_rad  = deg2rad(0.),
