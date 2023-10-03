@@ -1,4 +1,5 @@
 include("Functions.jl")
+include("DataHandling.jl")
 
 # =========================
 # This code is meant to perform a simulation for a single polarimeter of the Stripeline pipeline,

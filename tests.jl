@@ -1,4 +1,5 @@
 include("Functions.jl")
+include("DataHandling.jl")
 using Test
 using Random
 
