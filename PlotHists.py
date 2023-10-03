@@ -15,6 +15,12 @@ def read_hist_file(fname):
     return int(nbins), float(step), int(outliers), freq.astype(int), bins.astype(float)
 
 
+# def combine_hist(nhist, start_days, ndays, pol_name):
+    
+    
+    
+    
+
 
 def main():
     
