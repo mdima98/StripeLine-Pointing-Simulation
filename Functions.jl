@@ -30,13 +30,6 @@ function parse_commandline()
     return parse_args(s)
 end
 
-# function bins_width(time_range)
-#     # Trying following Freedman-Diaconis rule
-#     nsamples = length(time_range) * ndays
-#     bin_width = nsamples^(-1. / 3.)
-#     return bin_width
-# end
-
 function make_histogram(θ, nbins)
     
     H = zeros(Float64, 2, nbins)
