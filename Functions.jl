@@ -210,7 +210,7 @@ function simulate_pointing(nbins, τ_s, config_ang, pol_or, start_day, ndays, po
 
         point_err = compute_point_err(dirs_ideal, dirs_real)
         # point_err = rescaling(point_err)
-        point_err ./ (1 / 3600.) # scaled to arcsec
+        point_err ./= (1 / 3600.) # scaled to arcsec
         outliers += fill_histogram!(H, step, point_err)
     end
 

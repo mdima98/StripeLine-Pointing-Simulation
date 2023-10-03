@@ -1,3 +1,12 @@
 #!/bin/bash
 
-parallel -j 3 julia Simulation.jl 0 10 '{1}' ::: I0 I1 V4
+if [ "$1" == "" ]; then
+    echo "Usage: $(basename $0) STARTDAY NDAYS POL"
+    exit 1
+fi
+
+readonly STARTDAY = "$1"
+readonly NDAYS = "$2"
+readonly POL = "$3"
+
+time julia Simulation.jl $STARTDAY $NDAYS $POL
