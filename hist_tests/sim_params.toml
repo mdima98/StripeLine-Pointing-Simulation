@@ -1,0 +1,27 @@
+# ==========================================================
+# Parameters File for StripeLine-Pointing-Simulation
+# ==========================================================
+
+
+# ==========================================================
+# Various parameters of the simulation
+[parameters]
+f_sample = 50.0   # Sampling frequency of the simulation
+datetime = 2025-01-01 15:00:00Z   # Date and Time (separeted by a space charcater) when the simulation starts.
+dirname = "hits_tests/"   # Directory to save simulation results
+# ==========================================================
+
+
+# ==========================================================
+# Configuration angles in DEGREES - At least one angle must be non-zero
+[config_angles]
+wheel1ang_0 = 0.0
+wheel2ang_0 = 2.0
+wheel3ang_0 = 0.0
+forkang  = 0.0
+omegaVAXang = 0.0
+zVAXang = 0.0
+panang = 0.0
+tiltang = 0.0
+rollang =  0.0
+# ==========================================================

@@ -75,7 +75,28 @@ using Random
 
         @testset "DataHandling Tests" begin
 
+            params_t, config_angle_t = parse_param_file("hist_tests/sim_params.toml")
 
+            config_ang = Stripeline.configuration_angles(
+                wheel1ang_0_rad  = deg2rad(0.),
+                wheel2ang_0_rad  = deg2rad(2.0),
+                wheel3ang_0_rad  = deg2rad(0.),
+                forkang_rad  = deg2rad(0.),
+                omegaVAXang_rad  = deg2rad(0.),
+                zVAXang_rad  = deg2rad(0.),
+                panang_rad  = deg2rad(0.),
+                tiltang_rad  = deg2rad(0.),
+                rollang_rad  = deg2rad(0.)  
+                )
+
+            params = Dict("f_sample" => 50.0,   
+                "datetime" => DateTime(2025, 1, 1, 15, 0, 0),
+                "dirname" => "hits_tests/"
+            )
+            @test params_t == params
+            @test config_angle_t == config_ang
+
+            
         end
 
 
