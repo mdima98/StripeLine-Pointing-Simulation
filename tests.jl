@@ -1,5 +1,7 @@
-include("Functions.jl")
 include("DataHandling.jl")
+include("Functions.jl")
+
+
 using Test
 using Random
 
@@ -67,6 +69,11 @@ using Random
             @test ispath(set_sim_dir(dirname, pol_name))
 
 
+
+
+        end
+
+        @testset "DataHandling Tests" begin
 
 
         end

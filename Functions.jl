@@ -11,6 +11,11 @@ function parse_commandline()
 
     @add_arg_table s begin
 
+        "param_file"
+            help = "Parameters file for the simulation."
+            arg_type =String
+            required = true
+
         "start_day"
             help = "The starting day of the simulation."
             arg_type = Int
@@ -165,7 +170,7 @@ end
 function simulate_pointing(nbins, τ_s, config_ang, pol_or, start_day, ndays, pol_name, dirname)
     
     # Set starting day
-    dt = DateTime(2024, 01, 01, 15, 0, 0)
+    dt = DateTime(2025, 01, 01, 15, 0, 0)
     first_day = dt + Dates.Day(start_day)
     last_day = first_day + Dates.Day(ndays)
     # sim_days = (first_day+Dates.Day(1)) : Dates.Day(1) : last_day # From second day onwards
