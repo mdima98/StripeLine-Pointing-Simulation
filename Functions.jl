@@ -167,10 +167,10 @@ function set_first_hist!(first_day, time_range, pol_or, nbins, config_ang, outli
     return (H, step)
 end
 
-function simulate_pointing(nbins, τ_s, config_ang, pol_or, start_day, ndays, pol_name, dirname)
+function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
     
     # Set starting day
-    dt = DateTime(2025, 01, 01, 15, 0, 0)
+    dt = params["datetime"]
     first_day = dt + Dates.Day(start_day)
     last_day = first_day + Dates.Day(ndays)
     # sim_days = (first_day+Dates.Day(1)) : Dates.Day(1) : last_day # From second day onwards
@@ -178,12 +178,13 @@ function simulate_pointing(nbins, τ_s, config_ang, pol_or, start_day, ndays, po
     
     outliers = 0
 
+    τ_s = 1. / params["f_sample"]
     day_total_time_s = 3600.0 * 24.0
     day_time_range = 0 : τ_s : (day_total_time_s - τ_s)
 
-    err_min = 1.3744  # arcsec
-    err_max = 1.3785  # arcsec
-    (H, step) = make_hist(nbins, err_min, err_max)
+    # err_min = 1.3744  # arcsec
+    # err_max = 1.3785  # arcsec
+    # (H, step) = make_hist(nbins, err_min, err_max)
 
     # (H, step) = set_first_hist!(first_day, day_time_range, pol_or, nbins, config_ang, outliers)
     

@@ -75,7 +75,7 @@ using Random
 
         @testset "DataHandling Tests" begin
 
-            params_t, config_angle_t = parse_param_file("hist_tests/sim_params.toml")
+            params_t, config_angle_t = parse_param_file("hist_tests/params_test.toml")
 
             config_ang = Stripeline.configuration_angles(
                 wheel1ang_0_rad  = deg2rad(0.),
@@ -96,7 +96,7 @@ using Random
             @test params_t == params
             @test config_angle_t == config_ang
 
-            
+
         end
 
 

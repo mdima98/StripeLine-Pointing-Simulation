@@ -23,10 +23,10 @@ function main()
 
     params, config_ang = parse_param_file(param_file)
 
-    println("Simulating polarimeter $(pol_name) from day $(start_day) to day $(start_day+ndays)")
+    println("Simulating polarimeter $(pol_name) from day $(start_day) to day $(start_day+ndays) ...")
 
     # Do simulation
-    simulate_pointing(nbins, τ_s, config_ang, pol_or, start_day, ndays, pol_name, dirname)
+    simulate_pointing(params, config_ang, start_day, ndays, pol_or)
 
 end
 
