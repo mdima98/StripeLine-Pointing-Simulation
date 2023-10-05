@@ -40,7 +40,7 @@ function fill_hist!(point_err, hist, unit)
     errs = round.(Int64, point_err)
 
     for err_i in errs
-        hist[err_i] = get(hist, err_i, 0) + 1
+        hist[string(err_i)] = get(hist, string(err_i), 0) + 1
     end
 
 end

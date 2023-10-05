@@ -18,15 +18,12 @@ function main()
     ndays = parsed_args["length"]
     pol_name = parsed_args["polarimeter"]
 
-    db = Stripeline.InstrumentDB()
-    pol_or = db.focalplane[pol_name].orientation
-
     params, config_ang = parse_param_file(param_file)
 
     println("Simulating polarimeter $(pol_name) from day $(start_day) to day $(start_day+ndays) ...")
 
     # Do simulation
-    simulate_pointing(params, config_ang, start_day, ndays, pol_or)
+    simulate_pointing(params, config_ang, start_day, ndays, pol_name)
 
 end
 

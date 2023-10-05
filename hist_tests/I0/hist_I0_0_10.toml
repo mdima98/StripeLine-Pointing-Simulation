@@ -1,0 +1,8 @@
+[specifics]
+pol_name = "I0"
+units = "arcsec"
+
+[hist]
+7201 = 15789117
+7203 = 1643324
+7202 = 30087559

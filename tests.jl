@@ -34,7 +34,7 @@ using Random
             @test outliers_t == 2
 
 
-            # print_hist(H_t, step_t, outliers_t, "hist_tests.dat", "hist_tests/")
+            
 
 
         end
@@ -66,7 +66,7 @@ using Random
             dirname = raw"hist_tests/"
             pol_name = "I0"
 
-            @test ispath(set_sim_dir(dirname, pol_name))
+            @test ispath(set_sim_dir(dirname, pol_name, false))
 
 
 
@@ -97,18 +97,18 @@ using Random
             @test params_t == params
             @test config_angle_t == config_ang
 
-            point_err = [ 1, 4, 5, 5.2, 6.6, 3, 4.3, 5]
+            point_err = [ 1, 4, 5, 5.2, 6.6, -3, 4.3, 5]
 
-            hist = Dict(
+            hist = Dict{String, Int64}(
                 1 => 1,
-                3 => 1,
+                -3 => 1,
                 4 => 2,
                 5 => 3,
                 7 => 1,
             )
 
             hist_t = Dict{Int64, Int64}()
-            fill_hist!(point_err, hist_t, "arcsec")
+            fill_hist!(point_err, hist_t, "deg")
 
             @test hist == hist_t
 

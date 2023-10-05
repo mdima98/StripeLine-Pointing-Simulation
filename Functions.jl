@@ -1,8 +1,7 @@
-import Stripeline
-
+using Stripeline
 using Printf
 using ArgParse
-using AstroLib, Dates
+using Dates
 using Statistics
 
 
@@ -13,7 +12,7 @@ function parse_commandline()
 
         "param_file"
             help = "Parameters file for the simulation."
-            arg_type =String
+            arg_type = String
             required = true
 
         "start_day"
@@ -115,12 +114,16 @@ function compute_point_err(dirs_ideal, dirs_real)
     return point_err
 end
 
-function set_sim_dir(dirname, pol_name)
+function set_sim_dir(dirname, pol_name, cleardir)
     
     dirpath = joinpath(dirname,pol_name)
     
     if ispath(dirpath)
         return dirpath
+    elseif cleardir
+        rm(dirpath, recursive=true)
+        fpath = mkpath(dirpath)
+        return fpath
     else
         fpath = mkpath(dirpath)
         return fpath
@@ -167,8 +170,12 @@ function set_first_hist!(first_day, time_range, pol_or, nbins, config_ang, outli
     return (H, step)
 end
 
-function simulate_pointing(params, config_ang, start_day, ndays, pol_or)
+function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
     
+    # Get polarimeter orientation
+    db = InstrumentDB()
+    pol_or = db.focalplane[pol_name].orientation
+
     # Set starting day
     dt = params["datetime"]
     first_day = dt + Dates.Day(start_day)
@@ -181,7 +188,7 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_or)
     day_time_range = 0 : τ_s : (day_total_time_s - τ_s)
 
     # Dict for histogram
-    hist = Dict{Int64, Int64}()
+    hist = Dict{String, Int64}()
 
     # err_min = 1.3744  # arcsec
     # err_max = 1.3785  # arcsec
@@ -192,7 +199,7 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_or)
     # Simulate pointing for each day, compute error and update hist
     for day in sim_days
 
-        dirs_ideal, _ = Stripeline.genpointings(
+        dirs_ideal, _ = genpointings(
             telescope_motors,
             pol_or,
             day_time_range,
@@ -200,7 +207,7 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_or)
             config_ang = nothing
         )
         
-        dirs_real, _ = Stripeline.genpointings(
+        dirs_real, _ = genpointings(
             telescope_motors,
             pol_or,
             day_time_range,
@@ -209,21 +216,31 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_or)
         )
 
         point_err = compute_point_err(dirs_ideal, dirs_real)
-        
-        
-
-
-
-
-
-
-        outliers += fill_histogram!(H, step, point_err)
+        fill_hist!(point_err, hist, params["units"])
+        #outliers += fill_histogram!(H, step, point_err)
     end
 
-    # Save hist to file
-    sim_dir = set_sim_dir(dirname, pol_name)
-    fname = "hist_$(pol_name)_$(start_day)_$(start_day+ndays).hist"
+    specifics = Dict(
+        "pol_name" => pol_name,
+        "units" => params["units"]
+    )
+
+    data = Dict{String, Dict}(
+        "specifics" => specifics,
+        "hist" => hist
+    )
+
+    # Save data to .toml file
+    sim_dir = set_sim_dir(params["dirname"], pol_name, params["cleardir"])
+    fname = "hist_$(pol_name)_$(start_day)_$(start_day+ndays).toml"
     fpath = joinpath(sim_dir, fname)
-    print_hist(H,step, outliers, fpath)
+
+    open(fpath, "w") do file
+        TOML.print(file, data)
+    end
+
+    
+
+    # print_hist(H,step, outliers, fpath)
 
 end
