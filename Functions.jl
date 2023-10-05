@@ -3,6 +3,7 @@ using Printf
 using ArgParse
 using Dates
 using Statistics
+using ProgressMeter
 
 
 function parse_commandline()
@@ -180,7 +181,6 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
     dt = params["datetime"]
     first_day = dt + Dates.Day(start_day)
     last_day = first_day + Dates.Day(ndays)
-    # sim_days = (first_day+Dates.Day(1)) : Dates.Day(1) : last_day # From second day onwards
     sim_days = first_day : Dates.Day(1) : last_day
 
     τ_s = 1. / params["f_sample"]
