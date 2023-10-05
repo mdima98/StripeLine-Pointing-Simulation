@@ -167,7 +167,7 @@ function set_first_hist!(first_day, time_range, pol_or, nbins, config_ang, outli
     return (H, step)
 end
 
-function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
+function simulate_pointing(params, config_ang, start_day, ndays, pol_or)
     
     # Set starting day
     dt = params["datetime"]
@@ -175,12 +175,13 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
     last_day = first_day + Dates.Day(ndays)
     # sim_days = (first_day+Dates.Day(1)) : Dates.Day(1) : last_day # From second day onwards
     sim_days = first_day : Dates.Day(1) : last_day
-    
-    outliers = 0
 
     τ_s = 1. / params["f_sample"]
     day_total_time_s = 3600.0 * 24.0
     day_time_range = 0 : τ_s : (day_total_time_s - τ_s)
+
+    # Dict for histogram
+    hist = Dict{Int64, Int64}()
 
     # err_min = 1.3744  # arcsec
     # err_max = 1.3785  # arcsec
@@ -188,7 +189,7 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
 
     # (H, step) = set_first_hist!(first_day, day_time_range, pol_or, nbins, config_ang, outliers)
     
-    # Simulate pointing for each day, compute error and make hist
+    # Simulate pointing for each day, compute error and update hist
     for day in sim_days
 
         dirs_ideal, _ = Stripeline.genpointings(
@@ -208,8 +209,14 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
         )
 
         point_err = compute_point_err(dirs_ideal, dirs_real)
-        # point_err = rescaling(point_err)
-        point_err ./= (1 / 3600.) # scaled to arcsec
+        
+        
+
+
+
+
+
+
         outliers += fill_histogram!(H, step, point_err)
     end
 
