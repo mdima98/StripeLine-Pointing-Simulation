@@ -9,8 +9,9 @@
 f_sample = 50.0   # Sampling frequency of the simulation
 datetime = 2025-01-01 15:00:00Z   # Date and Time (separeted by a space charcater) when the simulation starts
 dirname = "hist_tests/"   # Directory to save simulation results
-units = "arcsec" # Units for histogram making - Choose between "deg", "arcmin", "arcsec"
-cleardir = false # Clear already existing results directories - WARNING for using it with parallel
+units = "arcsec"   # Units for histogram making - Choose between "deg", "arcmin", "arcsec"
+cleardir = false   # Clear already existing results directories - WARNING for using it with parallel
+progressbar = true   # Show a progress bar for the simualtion 
 # ==========================================================
 
 

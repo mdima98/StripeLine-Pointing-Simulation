@@ -195,7 +195,14 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
     # (H, step) = make_hist(nbins, err_min, err_max)
 
     # (H, step) = set_first_hist!(first_day, day_time_range, pol_or, nbins, config_ang, outliers)
-    
+
+
+    # Set progress meter
+    if params["progressbar"]
+        message = "Simulating polarimeter $(pol_name) from day $(start_day) to day $(start_day+ndays)..."
+        p = Progress(length(sim_days); desc=message, dt=1.0, barglyphs=BarGlyphs("[=> ]"), barlen=50, color=:yellow, showspeed=true)
+    end
+
     # Simulate pointing for each day, compute error and update hist
     for day in sim_days
 
@@ -218,6 +225,10 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
         point_err = compute_point_err(dirs_ideal, dirs_real)
         fill_hist!(point_err, hist, params["units"])
         #outliers += fill_histogram!(H, step, point_err)
+
+        if params["progressbar"]
+            next!(p)
+        end
     end
 
     specifics = Dict(
@@ -239,8 +250,8 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
         TOML.print(file, data)
     end
 
-    
-
     # print_hist(H,step, outliers, fpath)
+
+    finish!(p)
 
 end
