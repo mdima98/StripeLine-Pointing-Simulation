@@ -1,7 +1,7 @@
 using TOML
 
 # # =========================
-# Here are all the functions and structures needed to handle the results of the simulation
+# Here are some of the functions and structures needed to handle the results of the simulation
 # i. e. poinint error histograms.
 # =========================
 
