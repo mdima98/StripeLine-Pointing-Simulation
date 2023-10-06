@@ -1,15 +1,20 @@
-import Stripeline
-
+using Stripeline
 using Printf
 using ArgParse
-using AstroLib, Dates
+using Dates
 using Statistics
+using ProgressMeter
 
 
 function parse_commandline()
     s = ArgParseSettings()
 
     @add_arg_table s begin
+
+        "param_file"
+            help = "Parameters file for the simulation."
+            arg_type = String
+            required = true
 
         "start_day"
             help = "The starting day of the simulation."
@@ -110,12 +115,16 @@ function compute_point_err(dirs_ideal, dirs_real)
     return point_err
 end
 
-function set_sim_dir(dirname, pol_name)
+function set_sim_dir(dirname, pol_name, cleardir)
     
     dirpath = joinpath(dirname,pol_name)
     
     if ispath(dirpath)
         return dirpath
+    elseif cleardir
+        rm(dirpath, recursive=true)
+        fpath = mkpath(dirpath)
+        return fpath
     else
         fpath = mkpath(dirpath)
         return fpath
@@ -162,30 +171,42 @@ function set_first_hist!(first_day, time_range, pol_or, nbins, config_ang, outli
     return (H, step)
 end
 
-function simulate_pointing(nbins, τ_s, config_ang, pol_or, start_day, ndays, pol_name, dirname)
+function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
     
+    # Get polarimeter orientation
+    db = InstrumentDB()
+    pol_or = db.focalplane[pol_name].orientation
+
     # Set starting day
-    dt = DateTime(2024, 01, 01, 15, 0, 0)
+    dt = params["datetime"]
     first_day = dt + Dates.Day(start_day)
     last_day = first_day + Dates.Day(ndays)
-    # sim_days = (first_day+Dates.Day(1)) : Dates.Day(1) : last_day # From second day onwards
     sim_days = first_day : Dates.Day(1) : last_day
-    
-    outliers = 0
 
+    τ_s = 1. / params["f_sample"]
     day_total_time_s = 3600.0 * 24.0
     day_time_range = 0 : τ_s : (day_total_time_s - τ_s)
 
-    err_min = 1.3744  # arcsec
-    err_max = 1.3785  # arcsec
-    (H, step) = make_hist(nbins, err_min, err_max)
+    # Dict for histogram
+    hist = Dict{String, Int64}()
+
+    # err_min = 1.3744  # arcsec
+    # err_max = 1.3785  # arcsec
+    # (H, step) = make_hist(nbins, err_min, err_max)
 
     # (H, step) = set_first_hist!(first_day, day_time_range, pol_or, nbins, config_ang, outliers)
-    
-    # Simulate pointing for each day, compute error and make hist
+
+
+    # Set progress meter
+    if params["progressbar"]
+        message = "Simulating polarimeter $(pol_name) from day $(start_day) to day $(start_day+ndays)..."
+        p = Progress(length(sim_days); desc=message, dt=1.0, barglyphs=BarGlyphs("[=> ]"), barlen=50, color=:yellow, showspeed=true)
+    end
+
+    # Simulate pointing for each day, compute error and update hist
     for day in sim_days
 
-        dirs_ideal, _ = Stripeline.genpointings(
+        dirs_ideal, _ = genpointings(
             telescope_motors,
             pol_or,
             day_time_range,
@@ -193,7 +214,7 @@ function simulate_pointing(nbins, τ_s, config_ang, pol_or, start_day, ndays, po
             config_ang = nothing
         )
         
-        dirs_real, _ = Stripeline.genpointings(
+        dirs_real, _ = genpointings(
             telescope_motors,
             pol_or,
             day_time_range,
@@ -202,15 +223,35 @@ function simulate_pointing(nbins, τ_s, config_ang, pol_or, start_day, ndays, po
         )
 
         point_err = compute_point_err(dirs_ideal, dirs_real)
-        # point_err = rescaling(point_err)
-        point_err ./= (1 / 3600.) # scaled to arcsec
-        outliers += fill_histogram!(H, step, point_err)
+        fill_hist!(point_err, hist, params["units"])
+        #outliers += fill_histogram!(H, step, point_err)
+
+        if params["progressbar"]
+            next!(p)
+        end
     end
 
-    # Save hist to file
-    sim_dir = set_sim_dir(dirname, pol_name)
-    fname = "hist_$(pol_name)_$(start_day)_$(start_day+ndays).hist"
+    specifics = Dict(
+        "pol_name" => pol_name,
+        "units" => params["units"]
+    )
+
+    data = Dict{String, Dict}(
+        "specifics" => specifics,
+        "hist" => hist
+    )
+
+    # Save data to .toml file
+    sim_dir = set_sim_dir(params["dirname"], pol_name, params["cleardir"])
+    fname = "hist_$(pol_name)_$(start_day)_$(start_day+ndays).toml"
     fpath = joinpath(sim_dir, fname)
-    print_hist(H,step, outliers, fpath)
+
+    open(fpath, "w") do file
+        TOML.print(file, data)
+    end
+
+    # print_hist(H,step, outliers, fpath)
+
+    finish!(p)
 
 end
