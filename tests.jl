@@ -73,7 +73,7 @@ using Random
 
         end
 
-        @testset "DataHandling Tests" begin
+        @testset "Data Handling Tests" begin
 
             params_t, config_angle_t = parse_param_file("hist_tests/params_test.toml")
 

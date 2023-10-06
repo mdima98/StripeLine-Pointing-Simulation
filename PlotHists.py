@@ -61,7 +61,6 @@ def main():
     # fname = s[-1].replace(".hist", ".png")
     # savepath = plotdir+fname
     # plt.savefig(savepath)
-    plt.savefig("hist_plots/I0_I1_V4_0_10.png")
 
     plt.show()
 
