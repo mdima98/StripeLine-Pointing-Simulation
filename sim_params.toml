@@ -10,7 +10,7 @@ datetime = 2025-01-01 15:00:00Z   # DateTime (separeted by a space charcater) wh
 dirname = "hist_tests/"   # Directory to save simulation results
 units = "arcsec"   # Units for histogram making - Choose between "deg", "arcmin", "arcsec"
 cleardir = false   # Clear already existing results directories - WARNING for using it with parallel
-progressbar = true   # Show a progress bar durign the simualtion 
+progressbar = true   # Show a progress bar during the simualtion 
 # ==========================================================
 
 

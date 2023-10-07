@@ -1,12 +1,15 @@
 #!/bin/bash
 
-if [ "$1" == "" ]; then
-    echo "Usage: $(basename $0) STARTDAY NDAYS POL"
-    exit 1
-fi
+# Simulation starting values
+readonly PARAMFILE="sim_params.toml"
+readonly NCORES=5
+readonly FIRSTDAY=0
+readonly LASTDAY=10
+readonly POL="I0 Y4 V4 G5 R2"
+readonly NPOL=5
 
-readonly STARTDAY = "$1"
-readonly NDAYS = "$2"
-readonly POL = "$3"
+readonly NDAYS=$(((LASTDAY-FIRSTDAY)*NPOL/NCORES))
+readonly STARTDAY=$(seq $FIRSTDAY $NDAYS $LASTDAY)
 
-time julia Simulation.jl $STARTDAY $NDAYS $POL
+
+parallel -j $NCORES julia pointing-simulation/Simulation.jl '{1}' '{2}' '{3}' '{4}' ::: $PARAMFILE ::: $STARTDAY ::: $NDAYS ::: $POL

@@ -119,12 +119,12 @@ function set_sim_dir(dirname, pol_name, cleardir)
     
     dirpath = joinpath(dirname,pol_name)
     
-    if ispath(dirpath)
-        return dirpath
-    elseif cleardir
+    if ispath(dirpath) && cleardir
         rm(dirpath, recursive=true)
         fpath = mkpath(dirpath)
         return fpath
+    elseif ispath(dirpath)
+        return dirpath
     else
         fpath = mkpath(dirpath)
         return fpath
