@@ -9,7 +9,8 @@ readonly POL="I0 Y4 V4 G5 R2"
 readonly NPOL=5
 
 readonly NDAYS=$(((LASTDAY-FIRSTDAY)*NPOL/NCORES))
-readonly STARTDAY=$(seq $FIRSTDAY $NDAYS $LASTDAY)
+readonly STARTDAY
+STARTDAY=$(seq $FIRSTDAY $NDAYS $LASTDAY)
 
 
 parallel -j $NCORES julia pointing-simulation/Simulation.jl '{1}' '{2}' '{3}' '{4}' ::: $PARAMFILE ::: $STARTDAY ::: $NDAYS ::: $POL

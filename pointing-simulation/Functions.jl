@@ -171,7 +171,7 @@ function set_first_hist!(first_day, time_range, pol_or, nbins, config_ang, outli
     return (H, step)
 end
 
-function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
+function simulate_pointing(params, config_angles, config_ang, start_day, ndays, pol_name)
     
     # Get polarimeter orientation
     db = InstrumentDB()
@@ -187,8 +187,9 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
     day_total_time_s = 3600.0 * 24.0
     day_time_range = 0 : τ_s : (day_total_time_s - τ_s)
 
-    # Dict for histogram
+    # Dict for histograms
     hist = Dict{String, Int64}()
+    hist2d = Dict{String, Int64}()
 
     # err_min = 1.3744  # arcsec
     # err_max = 1.3785  # arcsec
@@ -222,8 +223,7 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
             config_ang = config_ang
         )
 
-        point_err = compute_point_err(dirs_ideal, dirs_real)
-        fill_hist!(point_err, hist, params["units"])
+        fill_hist!(dirs_ideal, dirs_real, hist, hist2d, params["units"])
         #outliers += fill_histogram!(H, step, point_err)
 
         if params["progressbar"]
@@ -233,12 +233,17 @@ function simulate_pointing(params, config_ang, start_day, ndays, pol_name)
 
     specifics = Dict(
         "pol_name" => pol_name,
+        "first_day" => first_day,
+        "last_day" => last_day,
+        "ndays" => ndays,
         "units" => params["units"]
     )
 
     data = Dict{String, Dict}(
         "specifics" => specifics,
-        "hist" => hist
+        "config_angles" => config_angles,
+        "hist" => hist,
+        "hist2d" => hist2d,
     )
 
     # Save data to .toml file

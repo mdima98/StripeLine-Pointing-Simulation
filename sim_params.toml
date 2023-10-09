@@ -5,7 +5,7 @@
 # ==========================================================
 # Various parameters of the simulation
 [parameters]
-f_sample = 50.0   # Sampling frequency of the simulation
+f_sample = 50.0   # Sampling frequency of the simulation in Hz
 datetime = 2025-01-01 15:00:00Z   # DateTime (separeted by a space charcater) when the simulation starts
 dirname = "hist_tests/"   # Directory to save simulation results
 units = "arcsec"   # Units for histogram making - Choose between "deg", "arcmin", "arcsec"
@@ -18,7 +18,7 @@ progressbar = true   # Show a progress bar during the simualtion
 # Configuration angles in DEGREES - At least one angle must be non-zero
 [config_angles]
 wheel1ang_0 = 0.0
-wheel2ang_0 = 2.0
+wheel2ang_0 = 0.016666666666666666 # 1 arcmin
 wheel3ang_0 = 0.0
 forkang  = 0.0
 omegaVAXang = 0.0

@@ -25,10 +25,13 @@ function parse_param_file(param_file)
     rollang_rad  = deg2rad(config_angles["rollang"])  
     )
     
-    return params, config_ang
+    return params, config_angles, config_ang
 end
 
-function fill_hist!(point_err, hist, unit)
+"""
+This function rounds the pointing error and the dirs from genpoinitngs to integer units of `unit`, and fills the dictonary `hist` and `hist2d`.
+"""
+function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit)
 
     units = Dict(
         "deg" => 1.,
@@ -36,11 +39,23 @@ function fill_hist!(point_err, hist, unit)
         "arcsec" => 1. / 3600.
     )
 
+    point_err = compute_point_err(dirs_ideal, dirs_real)
+
     point_err ./= units[unit]
     errs = round.(Int64, point_err)
 
-    for err_i in errs
-        hist[string(err_i)] = get(hist, string(err_i), 0) + 1
+    colat = dirs_ideal[:,1] .- dirs_real[:,1]
+    colat ./= units[unit]
+    errs_colat = round.(Int64, colat)
+    
+    long = dirs_ideal[:,2] .- dirs_real[:,2]
+    long ./= units[unit]
+    errs_long = round.(Int64, long)  
+
+    for idx in range(1,length(errs))
+        hist[string(errs[idx])] = get(hist, string(errs[idx]), 0) + 1
+        data2d = string(errs_colat[idx])*','*string(errs_long[idx])
+        hist2d[data2d] = get(hist2d, data2d, 0) + 1
     end
 
 end
