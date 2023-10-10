@@ -18,9 +18,9 @@ progressbar = true   # Show a progress bar during the simualtion
 # Configuration angles in DEGREES - At least one angle must be non-zero
 [config_angles]
 wheel1ang_0 = 0.0
-wheel2ang_0 = 0.016666666666666666 # 1 arcmin
+wheel2ang_0 = 0.16666666666666666 # 10 arcmin
 wheel3ang_0 = 0.0
-forkang  = 0.0
+forkang  = 0.16666666666666666 # 10 arcmin
 omegaVAXang = 0.0
 zVAXang = 0.0
 panang = 0.0
