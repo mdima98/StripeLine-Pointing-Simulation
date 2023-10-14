@@ -7,22 +7,22 @@ using TOML
 
 function parse_param_file(param_file)
 
-    # Read toml filòe and sete params and config angles
+    # Read toml file and sete params and config angles
     toml_file = TOML.parsefile(param_file)
     params = toml_file["parameters"]
     config_angles = toml_file["config_angles"]
 
     # Set the configuration angles
     config_ang = Stripeline.configuration_angles(
-    wheel1ang_0_rad  = deg2rad(config_angles["wheel1ang_0"]),
-    wheel2ang_0_rad  = deg2rad(config_angles["wheel2ang_0"]),
-    wheel3ang_0_rad  = deg2rad(config_angles["wheel3ang_0"]),
-    forkang_rad  = deg2rad(config_angles["forkang"]),
-    omegaVAXang_rad  = deg2rad(config_angles["omegaVAXang"]),
-    zVAXang_rad  = deg2rad(config_angles["zVAXang"]),
-    panang_rad  = deg2rad(config_angles["panang"]),
-    tiltang_rad  = deg2rad(config_angles["tiltang"]),
-    rollang_rad  = deg2rad(config_angles["rollang"])  
+    wheel1ang_0_rad  = deg2rad(config_angles["wheel1ang_0_arcmin"]/60.),
+    wheel2ang_0_rad  = deg2rad(config_angles["wheel2ang_0_arcmin"]/60.),
+    wheel3ang_0_rad  = deg2rad(config_angles["wheel3ang_0_arcmin"]/60.),
+    forkang_rad  = deg2rad(config_angles["forkang_arcmin"]/60.),
+    omegaVAXang_rad  = deg2rad(config_angles["omegaVAXang_arcmin"]/60.),
+    zVAXang_rad  = deg2rad(config_angles["zVAXang_arcmin"]/60.),
+    panang_rad  = deg2rad(config_angles["panang_arcmin"]/60.),
+    tiltang_rad  = deg2rad(config_angles["tiltang_arcmin"]/60.),
+    rollang_rad  = deg2rad(config_angles["rollang_arcmin"]/60.)  
     )
     
     return params, config_angles, config_ang

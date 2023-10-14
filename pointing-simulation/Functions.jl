@@ -224,7 +224,7 @@ function simulate_pointing(params, config_angles, config_ang, start_day, ndays, 
         )
 
         fill_hist!(dirs_ideal, dirs_real, hist, hist2d, params["units"])
-        #outliers += fill_histogram!(H, step, point_err)
+        # outliers += fill_histogram!(H, step, point_err)
 
         if params["progressbar"]
             next!(p)

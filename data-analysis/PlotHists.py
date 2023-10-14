@@ -32,9 +32,9 @@ def read_toml_hist(fpath):
     
     # Get hist2D
     hist2d_dict = toml_dict["hist2d"]
-    trim_data2d(hist2d_dict)
+    #trim_data2d(hist2d_dict)
 
-    colat2d, long2d = list(zip(*(list(map(int, s.split(','))) for s in list(hist2d_dict.keys())))) # Seprated values of keys as colat and long
+    colat2d, long2d = list(zip(*(list(map(int, s.split(','))) for s in list(hist2d_dict.keys())))) # Separate values of keys as colat and long
     freq2d = np.fromiter(hist2d_dict.values(), dtype=int)
     
     data_dict = {
@@ -66,7 +66,7 @@ def main():
     data_dict = read_toml_hist(fpath)
     
     # Hist
-    fig, ax = plt.subplots(figsize=(12, 4), tight_layout=True)
+    fig, ax = plt.subplots(figsize=(8, 6), tight_layout=True)
     
     (bins, freq) = data_dict["hist"]
     bins_edges = np.append(bins-0.5, bins[-1]+0.5)
@@ -80,11 +80,11 @@ def main():
     ax.legend()
     
     # Hist2D
-    fig, ax = plt.subplots(figsize=(12, 4), tight_layout=True)
+    fig, ax = plt.subplots(figsize=(8, 6), tight_layout=True)
     
     (colat2d, long2d, freq2d) = data_dict["hist2d"]
     
-    g = ax.scatter(colat2d,long2d,c=freq2d, s=100, marker='s', edgecolors='none', label=data_dict["specifics"]["pol_name"])
+    g = ax.scatter(colat2d,long2d,c=freq2d, s=100, marker='o', edgecolors='none', label=data_dict["specifics"]["pol_name"], cmap='inferno')
     cbar = fig.colorbar(g, label="Frequency")
 
     
