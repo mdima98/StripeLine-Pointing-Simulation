@@ -120,7 +120,7 @@ end
 function save_results(specifics, results, params)
 
     # Set dir and filepaths
-    sim_dir = set_sim_dir(params["dirname"], specifics["pol_name"], params["cleardir"])
+    sim_dir = set_sim_dir(params["datadir"], specifics["pol_name"], params["cleardir"])
 
     fname_hist = "hist_$(specifics["pol_name"])_$(specifics["start_day"])_$(specifics["start_day"]+specifics["ndays"]).csv"
     fpath_hist =joinpath(sim_dir, fname_hist)

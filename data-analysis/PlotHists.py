@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 import toml
+from os import path
 
 
 polarimeters = ["I0", "I1", "V4"]
@@ -61,20 +62,27 @@ def trim_data2d(hist2d_dict):
 
 def main():
     
-    fpath = str(sys.argv[1])
+    fpath_specifics = str(sys.argv[1])
     
-    data_dict = read_toml_hist(fpath)
+    # data_dict = read_toml_hist(fpath)
+    with open(fpath_specifics, 'r') as file:
+          
+         specifics = toml.load(file)
+    
+    fhist = path.join(specifics["datadir"], specifics["pol_name"], specifics["results_hist"])
+    fhist2d = path.join(specifics["datadir"], specifics["pol_name"], specifics["results_hist2d"])
     
     # Hist
     fig, ax = plt.subplots(figsize=(8, 6), tight_layout=True)
     
-    (bins, freq) = data_dict["hist"]
+    # (bins, freq) = data_dict["hist"]
+    (bins, freq) = np.loadtxt(fhist, delimiter=',', unpack=True, dtype=int)
     bins_edges = np.append(bins-0.5, bins[-1]+0.5)
-    ax.stairs(freq, bins_edges, edgecolor="b", linewidth=1.0, fill=False, label=data_dict["specifics"]["pol_name"])
+    ax.stairs(freq, bins_edges, edgecolor="b", linewidth=1.0, fill=False, label=specifics["pol_name"])
     
     
     ax.legend()
-    ax.set_xlabel(f"Pointing Error [{data_dict['specifics']['units']}]")
+    ax.set_xlabel(f"Pointing Error [{specifics['units']}]")
     ax.set_yscale("log")
     ax.set_ylabel('Frequency')
     ax.legend()
@@ -82,14 +90,15 @@ def main():
     # Hist2D
     fig, ax = plt.subplots(figsize=(8, 6), tight_layout=True)
     
-    (colat2d, long2d, freq2d) = data_dict["hist2d"]
+    # (colat2d, long2d, freq2d) = data_dict["hist2d"]
+    (colat2d, long2d, freq2d) = np.loadtxt(fhist2d, delimiter=',', unpack=True, dtype=int)
     
-    g = ax.scatter(colat2d,long2d,c=freq2d, s=100, marker='o', edgecolors='none', label=data_dict["specifics"]["pol_name"], cmap='inferno')
+    g = ax.scatter(colat2d,long2d,c=freq2d, s=100, marker='o', edgecolors='none', label=specifics["pol_name"], cmap='inferno')
     cbar = fig.colorbar(g, label="Frequency")
 
     
-    ax.set_xlabel(f"Colatitude [{data_dict['specifics']['units']}]")
-    ax.set_ylabel(f"Longitude [{data_dict['specifics']['units']}]")
+    ax.set_xlabel(f"Colatitude [{specifics['units']}]")
+    ax.set_ylabel(f"Longitude [{specifics['units']}]")
     ax.legend()
 
     # plotdir = "hist_plots/"

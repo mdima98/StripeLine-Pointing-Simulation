@@ -199,7 +199,8 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
         "units" => params["units"],
         "config_ang" => config_ang_dict,
         "results_hist" => "",
-        "results_hist2d" => ""
+        "results_hist2d" => "",
+        "datadir" => params["datadir"]
     )
 
     results = Dict{String, Dict}(
