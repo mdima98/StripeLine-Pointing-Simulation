@@ -1,39 +1,14 @@
 using Stripeline
 using Printf
-using ArgParse
 using Dates
 using Statistics
 using ProgressMeter
 
 
-function parse_commandline()
-    s = ArgParseSettings()
-
-    @add_arg_table s begin
-
-        "param_file"
-            help = "Parameters file for the simulation."
-            arg_type = String
-            required = true
-
-        "start_day"
-            help = "The starting day of the simulation."
-            arg_type = Int
-            required = true
-
-        "length"
-            help = "How many days the simulation will last."
-            arg_type = Int
-            required = true
-
-        "polarimeter"
-            help = "The polarimeter to simulate."
-            arg_type = String
-            required = true
-    end
-
-    return parse_args(s)
-end
+# # =========================
+# Here are the functions that run the simualtion, such as the one computing the pointing error.
+# Also some deprecated functions.
+# =========================
 
 function make_histogram(θ, nbins)
     
@@ -115,22 +90,6 @@ function compute_point_err(dirs_ideal, dirs_real)
     return point_err
 end
 
-function set_sim_dir(dirname, pol_name, cleardir)
-    
-    dirpath = joinpath(dirname,pol_name)
-    
-    if ispath(dirpath) && cleardir
-        rm(dirpath, recursive=true)
-        fpath = mkpath(dirpath)
-        return fpath
-    elseif ispath(dirpath)
-        return dirpath
-    else
-        fpath = mkpath(dirpath)
-        return fpath
-    end
-end
-
 function rescaling(point_err)
 
     err_ave = mean(point_err)
@@ -171,7 +130,7 @@ function set_first_hist!(first_day, time_range, pol_or, nbins, config_ang, outli
     return (H, step)
 end
 
-function simulate_pointing(params, config_angles, config_ang, start_day, ndays, pol_name)
+function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays, pol_name)
     
     # Get polarimeter orientation
     db = InstrumentDB()
@@ -188,8 +147,8 @@ function simulate_pointing(params, config_angles, config_ang, start_day, ndays, 
     day_time_range = 0 : τ_s : (day_total_time_s - τ_s)
 
     # Dict for histograms
-    hist = Dict{String, Int64}()
-    hist2d = Dict{String, Int64}()
+    hist = Dict{Int64, Int64}()
+    hist2d = Dict{Tuple{Int64,Int64}, Int64}()
 
     # err_min = 1.3744  # arcsec
     # err_max = 1.3785  # arcsec
@@ -235,28 +194,23 @@ function simulate_pointing(params, config_angles, config_ang, start_day, ndays, 
         "pol_name" => pol_name,
         "first_day" => first_day,
         "last_day" => last_day,
+        "start_day" => start_day,
         "ndays" => ndays,
-        "units" => params["units"]
+        "units" => params["units"],
+        "config_ang" => config_ang_dict,
+        "results_hist" => "",
+        "results_hist2d" => ""
     )
 
-    data = Dict{String, Dict}(
-        "specifics" => specifics,
-        "config_angles" => config_angles,
+    results = Dict{String, Dict}(
         "hist" => hist,
-        "hist2d" => hist2d,
+        "hist2d" => hist2d
     )
 
-    # Save data to .toml file
-    sim_dir = set_sim_dir(params["dirname"], pol_name, params["cleardir"])
-    fname = "hist_$(pol_name)_$(start_day)_$(start_day+ndays).toml"
-    fpath = joinpath(sim_dir, fname)
-
-    open(fpath, "w") do file
-        TOML.print(file, data)
-    end
+    save_results(specifics, results, params)
 
     # print_hist(H,step, outliers, fpath)
-
-    finish!(p)
-
+    if params["progressbar"]
+        finish!(p)
+    end
 end

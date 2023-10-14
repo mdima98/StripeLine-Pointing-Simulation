@@ -18,12 +18,12 @@ function main()
     ndays = parsed_args["length"]
     pol_name = parsed_args["polarimeter"]
 
-    params, config_angles, config_ang = parse_param_file(param_file)
+    params, config_ang_dict, config_ang = parse_param_file(param_file)
 
     println()
 
     # Do simulation
-    simulate_pointing(params,config_angles, config_ang, start_day, ndays, pol_name)
+    simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays, pol_name)
 
     println()
 
