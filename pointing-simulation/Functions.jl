@@ -140,7 +140,7 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
     dt = params["datetime"]
     first_day = dt + Dates.Day(start_day)
     last_day = first_day + Dates.Day(ndays)
-    sim_days = first_day : Dates.Day(1) : last_day
+    sim_days = first_day : Dates.Day(1) : (last_day - Dates.Day(1))
 
     τ_s = 1. / params["f_sample"]
     day_total_time_s = 3600.0 * 24.0
