@@ -1,9 +1,9 @@
-pol_name = "Y1"
+pol_name = "I0"
 units = "arcsec"
-results_hist2d = "hist2d_Y1_0_1.csv"
+results_hist2d = "hist2d_I0_0_1.csv"
 datadir = "hist_tests/"
 last_day = 2025-01-02T15:00:00.000Z
-results_hist = "hist_Y1_0_1.csv"
+results_hist = "hist_I0_0_1.csv"
 first_day = 2025-01-01T15:00:00.000Z
 ndays = 1
 start_day = 0

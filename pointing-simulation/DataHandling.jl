@@ -66,11 +66,11 @@ function parse_param_file(param_file)
 end
 
 """
-This function sets the directory for results of `pol_name` simulation.
+This function sets the directory for `hist` results of `pol_name` simulation.
 """
-function set_sim_dir(dirname, pol_name, cleardir)
+function set_sim_dir(dirname, dataname, pol_name, cleardir)
     
-    dirpath = joinpath(dirname,pol_name)
+    dirpath = joinpath(dirname,dataname,pol_name)
     
     if ispath(dirpath) && cleardir
         rm(dirpath, recursive=true)
@@ -119,19 +119,22 @@ end
 
 function save_results(specifics, results, params)
 
-    # Set dir and filepaths
-    sim_dir = set_sim_dir(params["datadir"], specifics["pol_name"], params["cleardir"])
+    # Set dirs and filepaths
+    sim_dir_hist = set_sim_dir(params["datadir"], "hist", specifics["pol_name"], params["cleardir"])
+    sim_dir_hist2d = set_sim_dir(params["datadir"], "hist2d", specifics["pol_name"], params["cleardir"])
+    sim_dir_specifics = set_sim_dir(params["datadir"], "specifics", specifics["pol_name"], params["cleardir"])
+
 
     fname_hist = "hist_$(specifics["pol_name"])_$(specifics["start_day"])_$(specifics["start_day"]+specifics["ndays"]).csv"
-    fpath_hist =joinpath(sim_dir, fname_hist)
+    fpath_hist =joinpath(sim_dir_hist, fname_hist)
     specifics["results_hist"] = fname_hist
 
     fname_hist2d = "hist2d_$(specifics["pol_name"])_$(specifics["start_day"])_$(specifics["start_day"]+specifics["ndays"]).csv"
-    fpath_hist2d =joinpath(sim_dir, fname_hist2d)
+    fpath_hist2d =joinpath(sim_dir_hist2d, fname_hist2d)
     specifics["results_hist2d"] = fname_hist2d
 
     fname_specifics = "specifics_$(specifics["pol_name"])_$(specifics["start_day"])_$(specifics["start_day"]+specifics["ndays"]).toml"
-    fpath_specifics = joinpath(sim_dir, fname_specifics)
+    fpath_specifics = joinpath(sim_dir_specifics, fname_specifics)
 
     # Save results
     open(fpath_specifics, "w") do file
