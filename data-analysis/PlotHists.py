@@ -92,10 +92,14 @@ def main():
     
     (colat2d, long2d, freq2d) = np.loadtxt(fhist2d, delimiter=',', unpack=True, dtype=int)
     
-    g = ax.scatter(colat2d,long2d,c=freq2d, s=25, marker='o', edgecolors='none', label=specifics["pol_name"], cmap='inferno')
+    freq2d = np.ma.masked_where(freq2d < 35, freq2d)
+            
+    
+    g = ax.scatter(colat2d,long2d,c=freq2d, marker='o', edgecolors='none', label=specifics["pol_name"], cmap='inferno')
     cbar = fig.colorbar(g, label="Frequency")
 
     
+    ax.set_title("Distribution of Colatitude and Longitude Error")
     ax.set_xlabel(f"Colatitude [{specifics['units']}]")
     ax.set_ylabel(f"Longitude [{specifics['units']}]")
     ax.legend()

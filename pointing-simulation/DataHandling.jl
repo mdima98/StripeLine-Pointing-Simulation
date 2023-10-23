@@ -100,11 +100,11 @@ function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit)
     point_err ./= units[unit]
     errs = round.(Int64, point_err)
 
-    colat = dirs_ideal[:,1] .- dirs_real[:,1]
+    colat = rad2deg.(dirs_ideal[:,1] .- dirs_real[:,1])
     colat ./= units[unit]
     errs_colat = round.(Int64, colat)
     
-    long = dirs_ideal[:,2] .- dirs_real[:,2]
+    long = rad2deg.(dirs_ideal[:,2] .- dirs_real[:,2])
     long ./= units[unit]
     errs_long = round.(Int64, long)  
 
