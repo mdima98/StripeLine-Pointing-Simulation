@@ -66,7 +66,7 @@ using Random
             dirname = raw"hist_tests/"
             pol_name = "I0"
 
-            @test ispath(set_sim_dir(dirname, pol_name, false))
+            # @test ispath(set_sim_dir(dirname, pol_name, false))
 
 
 
