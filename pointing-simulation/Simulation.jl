@@ -13,17 +13,17 @@ function main()
     parsed_args = parse_commandline()
 
     # Setting simulation parameters
-    param_file = parsed_args["param_file"]
-    start_day = parsed_args["start_day"]
-    ndays = parsed_args["length"]
-    pol_name = parsed_args["polarimeter"]
+    param_file = pop!(parsed_args, "param_file")
+    start_day = pop!(parsed_args, "start_day")
+    ndays = pop!(parsed_args, "ndays")
+    polname = pop!(parsed_args, "polarimeter")
 
-    params, config_ang_dict, config_ang = parse_param_file(param_file)
+    params, config_ang_dict, config_ang = parse_param_file(param_file, parsed_args)
 
     println()
 
     # Do simulation
-    simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays, pol_name)
+    simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays, polname)
 
     println()
 

@@ -24,7 +24,7 @@ function parse_commandline()
             arg_type = Int
             required = true
 
-        "length"
+        "ndays"
             help = "How many days the simulation will last."
             arg_type = Int
             required = true
@@ -33,6 +33,52 @@ function parse_commandline()
             help = "The polarimeter to simulate."
             arg_type = String
             required = true
+
+        "--wheel1ang_0_arcmin"
+            help = "Value of boresight motor configuration angle."
+            arg_type = Float64
+            default = 0.0
+
+        "--wheel2ang_0_arcmin"
+            help = "Value of altitude motor configuration angle."
+            arg_type = Float64
+            default = 0.0
+
+        "--wheel3ang_0_arcmin"
+            help = "Value of ground motor configuration angle. Overrides the parameters file configuration angle."
+            arg_type = Float64
+            default = 0.0
+
+        "--forkang_arcmin"
+            help = "Deviation of orthogonality between H-Axis and V-Axis. Overrides the parameters file configuration angle."
+            arg_type = Float64
+            default = 0.0
+
+        "--omegaVAXang_arcmin"
+            help = "Deviation of V-Axis from local vertical (azimuth of ascending node). Overrides the parameters file configuration angle."
+            arg_type = Float64
+            default = 0.0
+
+        "--zVAXang_arcmin"
+            help = "Deviation of V-Axis from local vertical. Overrides the parameters file configuration angle."
+            arg_type = Float64
+            default = 0.0
+
+        "--panang_arcmin"
+            help = "Camera orientation around the x axis. Overrides the parameters file configuration angle."
+            arg_type = Float64
+            default = 0.0
+
+        "--tiltang_arcmin"
+            help = "Camera orientation around the y axis. Overrides the parameters file configuration angle."
+            arg_type = Float64
+            default = 0.0
+
+        "--rollang_arcmin"
+            help = "Camera orientation around the z axis. Overrides the parameters file configuration angle."
+            arg_type = Float64
+            default = 0.0
+
     end
 
     return parse_args(s)
@@ -42,12 +88,18 @@ end
 """
 This function parase the parameters file.
 """
-function parse_param_file(param_file)
+function parse_param_file(param_file, parsed_args)
 
     # Read toml file and sete params and config angles
     toml_file = TOML.parsefile(param_file)
     params = toml_file["parameters"]
     config_ang_dict = toml_file["config_angles"]
+
+    for ang in keys(parsed_args)
+        if parsed_args[ang] != 0.0
+            config_ang_dict[ang] = parsed_args[ang]
+        end
+    end
 
     # Set the configuration angles
     config_ang = Stripeline.configuration_angles(
@@ -68,9 +120,9 @@ end
 """
 This function sets the directory for `hist` results of `pol_name` simulation.
 """
-function set_sim_dir(dirname, dataname, pol_name, cleardir)
+function set_sim_dir(dirname, dataname, polname, cleardir)
     
-    dirpath = joinpath(dirname,dataname,pol_name)
+    dirpath = joinpath(dirname,dataname,polname)
     
     if ispath(dirpath) && cleardir
         rm(dirpath, recursive=true)
