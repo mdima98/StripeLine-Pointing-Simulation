@@ -76,6 +76,7 @@ def get_data(args):
             specifics = toml.load(file)
     except FileNotFoundError:
         print(colored("Error: The simulation data does not exist.", "red"))
+        print(f"Data in '{args.datadir}' must be in '{colored('hist', 'yellow')}', '{colored('hist2d', 'yellow')}' and '{colored('specifics', 'yellow')}' directories.")
         sys.exit()
     
     fhist = f"hist_{args.polarimeter}_{args.first_day}_{args.last_day}.csv"
