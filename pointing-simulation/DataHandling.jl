@@ -146,26 +146,35 @@ function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit)
         "arcmin" => 1. / 60.,
         "arcsec" => 1. / 3600.
     )
+ 
+    errs_pointing = get_point_err(dirs_ideal, dirs_real, units[unit])
+    errs_colat = get_colat_err(dirs_ideal, dirs_real, units[unit])
+    errs_long = get_long_err(dirs_ideal, dirs_real, units[unit])
 
-    point_err = compute_point_err(dirs_ideal, dirs_real)
-
-    point_err ./= units[unit]
-    errs = round.(Int64, point_err)
-
-    colat = rad2deg.(dirs_ideal[:,1] .- dirs_real[:,1])
-    colat ./= units[unit]
-    errs_colat = round.(Int64, colat)
-    
-    long = rad2deg.(dirs_ideal[:,2] .- dirs_real[:,2])
-    long ./= units[unit]
-    errs_long = round.(Int64, long)  
-
-    for idx in range(1,length(errs))
-        hist[errs[idx]] = get(hist, errs[idx], 0) + 1
+    for idx in range(1,length(errs_pointing))
+        hist[errs_pointing[idx]] = get(hist, errs_pointing[idx], 0) + 1
         data2d = (errs_colat[idx], errs_long[idx])
         hist2d[data2d] = get(hist2d, data2d, 0) + 1
     end
 
+end
+
+function get_point_err(dirs_ideal, dirs_real, units)
+    point_err = compute_point_err(dirs_ideal, dirs_real) ./ units
+    errs_point = round.(Int64, point_err)
+    return errs_point
+end
+
+function get_colat_err(dirs_ideal, dirs_real, units)
+    colat = rad2deg.(dirs_ideal[:,1] .- dirs_real[:,1]) ./ units
+    errs_colat = round.(Int64, colat)
+    return errs_colat
+end
+
+function get_long_err(dirs_ideal, dirs_real, units)
+    long = rad2deg.(dirs_ideal[:,2] .- dirs_real[:,2]) ./ units
+    errs_long = round.(Int64, long)
+    return errs_long
 end
 
 

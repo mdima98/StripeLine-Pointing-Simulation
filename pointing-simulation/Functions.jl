@@ -150,12 +150,6 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
     hist = Dict{Int64, Int64}()
     hist2d = Dict{Tuple{Int64,Int64}, Int64}()
 
-    # err_min = 1.3744  # arcsec
-    # err_max = 1.3785  # arcsec
-    # (H, step) = make_hist(nbins, err_min, err_max)
-
-    # (H, step) = set_first_hist!(first_day, day_time_range, pol_or, nbins, config_ang, outliers)
-
 
     # Set progress meter
     if params["progressbar"]
@@ -183,7 +177,6 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
         )
 
         fill_hist!(dirs_ideal, dirs_real, hist, hist2d, params["units"])
-        # outliers += fill_histogram!(H, step, point_err)
 
         if params["progressbar"]
             next!(p)
@@ -210,7 +203,6 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
 
     save_results(specifics, results, params)
 
-    # print_hist(H,step, outliers, fpath)
     if params["progressbar"]
         finish!(p)
     end
