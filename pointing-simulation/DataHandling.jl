@@ -155,6 +155,11 @@ function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit)
         hist[errs_pointing[idx]] = get(hist, errs_pointing[idx], 0) + 1
         data2d = (errs_colat[idx], errs_long[idx])
         hist2d[data2d] = get(hist2d, data2d, 0) + 1
+
+        # if errs_long[idx] >= 1295000
+        #     println(dirs_ideal[idx,2], "\t", dirs_real[idx,2])
+        # end
+
     end
 
 end

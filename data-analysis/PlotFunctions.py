@@ -6,6 +6,15 @@ def plot_hist(specifics, fhist):
     fig, ax = plt.subplots(figsize=(8, 6), tight_layout=True)
     
     (bins, freq) = np.loadtxt(fhist, delimiter=',', unpack=True, dtype=int)
+    
+    if type(bins) == np.int64:
+        bins= np.array([bins, bins+1])
+        freq = np.array([freq, 0])
+      
+    # Sort for hist plotting  
+    bins = np.sort(bins)
+    freq = np.array([freq for _, freq in sorted(zip(bins, freq), key=lambda pair: pair[0])])
+    
     bins_edges = np.append(bins-0.5, bins[-1]+0.5)
     
     ax.stairs(freq, bins_edges, edgecolor="b", linewidth=1.0, fill=False, label=specifics["pol_name"])
