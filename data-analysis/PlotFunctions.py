@@ -32,7 +32,7 @@ def plot_hist2d(specifics, fhist2d):
     
     (colat2d, long2d, freq2d) = np.loadtxt(fhist2d, delimiter=',', unpack=True, dtype=int)
     
-    freq2d = np.ma.masked_where(freq2d < 5, freq2d)
+    freq2d = np.ma.masked_where(freq2d < 35, freq2d)
             
     
     g = ax.scatter(colat2d,long2d,c=freq2d, marker='o', edgecolors='none', label=specifics["pol_name"], cmap='inferno')

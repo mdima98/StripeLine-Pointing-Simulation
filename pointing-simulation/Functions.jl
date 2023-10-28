@@ -146,9 +146,10 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
     day_total_time_s = 3600.0 * 24.0
     day_time_range = 0 : τ_s : (day_total_time_s - τ_s)
 
-    # Dict for histograms
+    # Dict for histograms and stats
     hist = Dict{Int64, Int64}()
     hist2d = Dict{Tuple{Int64,Int64}, Int64}()
+    stats = Dict{String, Float64}()
 
 
     # Set progress meter

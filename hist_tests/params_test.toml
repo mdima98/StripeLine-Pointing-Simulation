@@ -13,15 +13,15 @@ dirname = "hits_tests/"   # Directory to save simulation results
 
 
 # ==========================================================
-# Configuration angles in DEGREES - At least one angle must be non-zero
+# Configuration angles - At least one angle must be non-zero
 [config_angles]
-wheel1ang_0 = 0.0
-wheel2ang_0 = 2.0
-wheel3ang_0 = 0.0
-forkang  = 0.0
-omegaVAXang = 0.0
-zVAXang = 0.0
-panang = 0.0
-tiltang = 0.0
-rollang =  0.0
+wheel1ang_0_arcmin = 0.0
+wheel2ang_0_arcmin = 120.0
+wheel3ang_0_arcmin = 0.0
+forkang_arcmin  = 0.0
+omegaVAXang_arcmin = 0.0
+zVAXang_arcmin = 0.0
+panang_arcmin = 0.0
+tiltang_arcmin = 0.0
+rollang_arcmin =  0.0
 # ==========================================================
