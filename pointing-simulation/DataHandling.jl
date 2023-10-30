@@ -3,8 +3,7 @@ using TOML
 using DelimitedFiles
 
 # # =========================
-# Here are some of the functions and structures needed to handle infput parameters and results of the simulation
-# i. e. params file, poinint error histograms.
+# Here are some of the functions and structures needed to handle input parameters and simulation data.
 # =========================
 """
 This funtion parser command line arguments `params_file` `start_dat` `ndays` `pol_name` for the simulation.
@@ -86,7 +85,7 @@ end
 
 
 """
-This function parase the parameters file.
+This function parses the parameters file.
 """
 function parse_param_file(param_file, parsed_args)
 
@@ -118,7 +117,7 @@ function parse_param_file(param_file, parsed_args)
 end
 
 """
-This function sets the directory for `hist` results of `pol_name` simulation.
+This function sets the directory for `hist` and `hist2d` results of `pol_name` simulation.
 """
 function set_sim_dir(dirname, dataname, polname, cleardir)
     
@@ -152,44 +151,36 @@ function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit)
     
     point_err, colat_err, long_err = get_err(dirs_ideal, dirs_real, units[unit])
 
-    count = 0
-
     for idx in range(1,length(point_err))
         hist[point_err[idx]] = get(hist, point_err[idx], 0) + 1
         data2d = (colat_err[idx], long_err[idx])
         hist2d[data2d] = get(hist2d, data2d, 0) + 1
-
-        if long_err[idx] >= 1295000 && count <= 10
-            println((dirs_ideal[idx,2]), "\t",(dirs_real[idx,2]))
-            count+=1
-        end
-
     end
 
 end
 
-
+"""
+This function computes the colatitude, longitude and pointing error.
+"""
 function get_err(dirs_ideal, dirs_real, units)
 
+    # Normalize distribution of angles in [-180, 180)
     colat_ideal = angle_wrap180.(dirs_ideal[:,1])
     colat_real = angle_wrap180.(dirs_real[:,1])
     long_ideal = angle_wrap180.(dirs_ideal[:,2])
     long_real = angle_wrap180.(dirs_real[:,2])
-
-    # colat_err = colat_ideal .- colat_real
-    # long_err = long_ideal .- long_real
     
+    # Compute angular diff and err
     colat_err = angle_diff.(colat_ideal, colat_real)
     long_err = angle_diff.(long_ideal, long_real)
-    
-
-    # colat_err = dirs_ideal[:,1] .- dirs_real[:,1]
-    # long_err = dirs_ideal[:,2] .- dirs_real[:,2]
     point_err = compute_point_err_approx.(colat_err, long_err)
 
-    point_err = round.(Int64, point_err./units)
+    # point_err = compute_point_err(deg2rad.(dirs_ideal), deg2rad.(dirs_real))
+
+    # Scale and rounds results
     colat_err = round.(Int64, colat_err./units)
     long_err = round.(Int64, long_err./units)
+    point_err = round.(Int64, point_err./units)
 
     return point_err, colat_err, long_err
 

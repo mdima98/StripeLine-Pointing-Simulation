@@ -7,17 +7,6 @@ def plot_hist(specifics, fhist):
     
     (bins, freq) = np.loadtxt(fhist, delimiter=',', unpack=True, dtype=int)
     
-    if type(bins) == np.int64:
-        bins= np.array([bins, bins+1])
-        freq = np.array([freq, 0])
-    
-    # Masking bad data
-    freq = np.ma.masked_where(freq < 1, freq)
-    bins = np.ma.masked_where(np.ma.getmask(freq), bins)
-    
-    freq = freq.compressed()
-    bins = bins.compressed()
-    
     # Sort for hist plotting  
     # bins = np.sort(bins)
     # freq = np.array([freq for _, freq in sorted(zip(bins, freq), key=lambda pair: pair[0])])
@@ -39,8 +28,6 @@ def plot_hist2d(specifics, fhist2d):
     fig, ax = plt.subplots(figsize=(8, 6), tight_layout=True)
     
     (colat2d, long2d, freq2d) = np.loadtxt(fhist2d, delimiter=',', unpack=True, dtype=int)
-    
-    freq2d = np.ma.masked_where(freq2d < 1, freq2d)
             
     
     g = ax.scatter(colat2d,long2d,c=freq2d, marker='o', edgecolors='none', label=specifics["pol_name"], cmap='inferno')

@@ -6,8 +6,7 @@ using ProgressMeter
 
 
 # # =========================
-# Here are the functions that run the simualtion, such as the one computing the pointing error.
-# Also some deprecated functions.
+# Here are some general functions for runningthe simulation.
 # =========================
 
 
