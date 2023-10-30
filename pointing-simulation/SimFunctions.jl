@@ -100,7 +100,7 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
             config_ang = config_ang
         )
 
-        fill_hist!(dirs_ideal, dirs_real, hist, hist2d, params["units"])
+        fill_hist!(dirs_ideal, dirs_real, hist, hist2d, params["units"], stats)
 
         if params["progressbar"]
             next!(p)
@@ -117,7 +117,8 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
         "config_ang" => config_ang_dict,
         "results_hist" => "",
         "results_hist2d" => "",
-        "datadir" => params["datadir"]
+        "datadir" => params["datadir"],
+        "stats" => stats
     )
 
     results = Dict{String, Dict}(

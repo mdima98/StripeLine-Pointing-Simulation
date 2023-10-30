@@ -138,7 +138,7 @@ end
 """
 This function rounds the pointing error and the dirs from genpointings to integer units of `unit`, and fills the dictonary `hist` and `hist2d`.
 """
-function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit)
+function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit, stats)
 
     units = Dict(
         "deg" => 1.,
@@ -149,7 +149,7 @@ function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit)
     dirs_ideal = rad2deg.(dirs_ideal)
     dirs_real = rad2deg.(dirs_real)
     
-    point_err, colat_err, long_err = get_err(dirs_ideal, dirs_real, units[unit])
+    point_err, colat_err, long_err = get_err(dirs_ideal, dirs_real, units[unit], stats)
 
     for idx in range(1,length(point_err))
         hist[point_err[idx]] = get(hist, point_err[idx], 0) + 1
@@ -162,7 +162,7 @@ end
 """
 This function computes the colatitude, longitude and pointing error.
 """
-function get_err(dirs_ideal, dirs_real, units)
+function get_err(dirs_ideal, dirs_real, units, stats)
 
     # Normalize distribution of angles in [-180, 180)
     colat_ideal = angle_wrap180.(dirs_ideal[:,1])
@@ -182,22 +182,23 @@ function get_err(dirs_ideal, dirs_real, units)
     long_err = round.(Int64, long_err./units)
     point_err = round.(Int64, point_err./units)
 
+    update_stats!(colat_err, long_err, point_err, stats)    
+
     return point_err, colat_err, long_err
 
 end
 
-function update_stats!(hist, hist2d, stats, params)
+function update_stats!(colat_err, long_err, point_err, stats)
 
-    # Hist mean and std dev
-    point_err_count = 0
-    for bin in keys(hist)
-        stats["mean_point_err"] = get(stats, "mean_point_err", 0.0) + bins*hist[bin]
-        point_err_count += hist[bin]
-    end
-    stats["mean_point_err"]  /= point_err_count
+    stats["mean_colat_err"] = get(stats, "mean_colat_err", 0.0) + mean(colat_err)
+    stats["std_colat_err"] = get(stats, "std_colat_err", 0.0) + std(colat_err)
 
+    stats["mean_long_err"] = get(stats, "mean_long_err", 0.0) + mean(long_err)
+    stats["std_long_err"] = get(stats, "std_long_err", 0.0) + std(long_err)
 
-    
+    stats["mean_point_err"] = get(stats, "mean_point_err", 0.0) + mean(point_err)
+    stats["std_point_err"] = get(stats, "std_point_err", 0.0) + std(point_err)
+
 end
 
 function save_results(specifics, results, params)

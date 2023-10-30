@@ -1,20 +1,20 @@
 pol_name = "Y1"
-ndays = 1
+ndays = 10
 start_day = 0
 datadir = "hist_tests/"
-results_hist2d = "hist2d_Y1_0_1.csv"
-last_day = 2025-01-02T15:00:00.000Z
+results_hist2d = "hist2d_Y1_0_10.csv"
+last_day = 2025-01-11T15:00:00.000Z
 units = "arcsec"
-results_hist = "hist_Y1_0_1.csv"
+results_hist = "hist_Y1_0_10.csv"
 first_day = 2025-01-01T15:00:00.000Z
 
 [stats]
-mean_colat_err = 69.97831365740741
-mean_point_err = 660.7900944444444
-std_colat_err = 408.4999614923408
-std_long_err = 518.4899094685102
-mean_long_err = 0.0010226851851851853
-std_point_err = 62.78876780846463
+mean_colat_err = 699.7849331018517
+mean_point_err = 6607.895864120371
+std_colat_err = 4084.9954993884626
+std_long_err = 5184.897294422152
+mean_long_err = 0.010381944444444445
+std_point_err = 627.8873000568162
 
 [config_ang]
 tiltang_arcmin = 0.0
