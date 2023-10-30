@@ -90,6 +90,35 @@ function compute_point_err(dirs_ideal, dirs_real)
     return point_err
 end
 
+function compute_point_err_approx(colat_err, long_err)
+    return sqrt(colat_err^2 + long_err^2)
+end
+
+function angle_wrap360(ang)
+    x = mod1(ang, 360)
+    if x < 0
+        x += 360
+    end
+    return x
+end
+
+function angle_wrap180(ang)
+    x = mod(ang+180, 360)
+    if x < 0
+        x += 360
+    end
+    return x - 180
+    
+end
+
+function angle_diff(a,b)
+    dif = mod(a - b + 180, 360)
+    if dif < 0
+        dif += 360
+    end
+    return dif - 180
+end
+
 function rescaling(point_err)
 
     err_ave = mean(point_err)

@@ -10,14 +10,22 @@ def plot_hist(specifics, fhist):
     if type(bins) == np.int64:
         bins= np.array([bins, bins+1])
         freq = np.array([freq, 0])
-      
+    
+    # Masking bad data
+    freq = np.ma.masked_where(freq < 1, freq)
+    bins = np.ma.masked_where(np.ma.getmask(freq), bins)
+    
+    freq = freq.compressed()
+    bins = bins.compressed()
+    
     # Sort for hist plotting  
-    bins = np.sort(bins)
-    freq = np.array([freq for _, freq in sorted(zip(bins, freq), key=lambda pair: pair[0])])
+    # bins = np.sort(bins)
+    # freq = np.array([freq for _, freq in sorted(zip(bins, freq), key=lambda pair: pair[0])])
     
     bins_edges = np.append(bins-0.5, bins[-1]+0.5)
     
-    ax.stairs(freq, bins_edges, edgecolor="b", linewidth=1.0, fill=False, label=specifics["pol_name"])
+    # ax.stairs(freq, bins_edges, edgecolor="b", linewidth=1.0, fill=False, label=specifics["pol_name"])
+    ax.bar(bins, freq, width=1.0,align='center', label=specifics["pol_name"])
     
     ax.set_title("Pointing Error Distribution")
     ax.set_xlabel(f"Pointing Error [{specifics['units']}]")
@@ -32,7 +40,7 @@ def plot_hist2d(specifics, fhist2d):
     
     (colat2d, long2d, freq2d) = np.loadtxt(fhist2d, delimiter=',', unpack=True, dtype=int)
     
-    freq2d = np.ma.masked_where(freq2d < 35, freq2d)
+    freq2d = np.ma.masked_where(freq2d < 1, freq2d)
             
     
     g = ax.scatter(colat2d,long2d,c=freq2d, marker='o', edgecolors='none', label=specifics["pol_name"], cmap='inferno')

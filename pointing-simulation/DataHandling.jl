@@ -147,48 +147,20 @@ function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit)
         "arcsec" => 1. / 3600.
     )
 
-    errs_pointing = get_point_err(dirs_ideal, dirs_real, units[unit])
-
     dirs_ideal = rad2deg.(dirs_ideal)
     dirs_real = rad2deg.(dirs_real)
-
-    # for i in range(1,length(dirs_ideal[:,1]))
-    #     if dirs_ideal[i,1] > deg2rad(180.0)
-    #         dirs_ideal[i,1] -= deg2rad(360.0)
-    #     end
-    #     if dirs_ideal[i,2] > deg2rad(180.0)
-    #         dirs_ideal[i,2] -= deg2rad(360.0)
-    #     end
-    #     if dirs_real[i,1] > deg2rad(180.0)
-    #         dirs_real[i,1] -= deg2rad(360.0)
-    #     end
-    #     if dirs_real[i,2] > deg2rad(180.0)
-    #         dirs_real[i,2] -= deg2rad(360.0)
-    #     end
-    # end
- 
     
-    errs_colat = get_colat_err(dirs_ideal, dirs_real, units[unit])
-    errs_long = get_long_err(dirs_ideal, dirs_real, units[unit])
+    point_err, colat_err, long_err = get_err(dirs_ideal, dirs_real, units[unit])
 
     count = 0
 
-    # for i in range(1,length(dirs_ideal[:,2]))
-    #     if dirs_ideal[i,2] > 180.0
-    #         dirs_ideal[i,2] -= 360.0
-    #     end
-    #     if dirs_real[i,2] > 180.0
-    #         dirs_real[i,2] -= 360.0
-    #     end
-    # end
-
-    for idx in range(1,length(errs_pointing))
-        hist[errs_pointing[idx]] = get(hist, errs_pointing[idx], 0) + 1
-        data2d = (errs_colat[idx], errs_long[idx])
+    for idx in range(1,length(point_err))
+        hist[point_err[idx]] = get(hist, point_err[idx], 0) + 1
+        data2d = (colat_err[idx], long_err[idx])
         hist2d[data2d] = get(hist2d, data2d, 0) + 1
 
-        if errs_long[idx] >= 1295000 && count <= 10
-            println(dirs_ideal[idx,2], "\t", dirs_real[idx,2])
+        if long_err[idx] >= 1295000 && count <= 10
+            println((dirs_ideal[idx,2]), "\t",(dirs_real[idx,2]))
             count+=1
         end
 
@@ -196,53 +168,42 @@ function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit)
 
 end
 
-function get_point_err(dirs_ideal, dirs_real, units)
-    point_err = compute_point_err(dirs_ideal, dirs_real) ./ units
-    errs_point = round.(Int64, point_err)
-    return errs_point
-end
 
-function get_colat_err(dirs_ideal, dirs_real, units)
+function get_err(dirs_ideal, dirs_real, units)
 
-    # for i in range(1,length(dirs_ideal[:,1]))
-    #     if dirs_ideal[i,1] > deg2rad(180.0)
-    #         dirs_ideal[i,1] -= deg2rad(360.0)
-    #     end
-    #     if dirs_real[i,1] > deg2rad(180.0)
-    #         dirs_real[i,1] -= deg2rad(360.0)
-    #     end
-    # end
+    colat_ideal = angle_wrap180.(dirs_ideal[:,1])
+    colat_real = angle_wrap180.(dirs_real[:,1])
+    long_ideal = angle_wrap180.(dirs_ideal[:,2])
+    long_real = angle_wrap180.(dirs_real[:,2])
 
-    colat = (dirs_ideal[:,1] .- dirs_real[:,1]) ./ units
-    errs_colat = round.(Int64, colat)
-    return errs_colat
-end
+    # colat_err = colat_ideal .- colat_real
+    # long_err = long_ideal .- long_real
+    
+    colat_err = angle_diff.(colat_ideal, colat_real)
+    long_err = angle_diff.(long_ideal, long_real)
+    
 
-function get_long_err(dirs_ideal, dirs_real, units)
+    # colat_err = dirs_ideal[:,1] .- dirs_real[:,1]
+    # long_err = dirs_ideal[:,2] .- dirs_real[:,2]
+    point_err = compute_point_err_approx.(colat_err, long_err)
 
-    # for i in range(1,length(dirs_ideal[:,2]))
-    #     if dirs_ideal[i,2] > 180.0
-    #         dirs_ideal[i,2] -= 360.0
-    #     end
-    #     if dirs_real[i,2] > 180.0
-    #         dirs_real[i,2] -= 360.0
-    #     end
-    # end
+    point_err = round.(Int64, point_err./units)
+    colat_err = round.(Int64, colat_err./units)
+    long_err = round.(Int64, long_err./units)
 
-    long = (dirs_ideal[:,2] .- dirs_real[:,2]) ./ units
-    errs_long = round.(Int64, long)
-    return errs_long
+    return point_err, colat_err, long_err
+
 end
 
 function update_stats!(hist, hist2d, stats, params)
 
-    point_ert_count = 0
     # Hist mean and std dev
+    point_err_count = 0
     for bin in keys(hist)
         stats["mean_point_err"] = get(stats, "mean_point_err", 0.0) + bins*hist[bin]
-        point_ert_count += hist[bin]
+        point_err_count += hist[bin]
     end
-    stats["mean_poiny_err"]  /= point_ert_count
+    stats["mean_point_err"]  /= point_err_count
 
 
     
