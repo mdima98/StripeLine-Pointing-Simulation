@@ -1,0 +1,25 @@
+pol_name = "G5"
+ndays = 10
+start_day = 0
+datadir = "hist_tests/"
+results_hist2d = "hist2d_G5_0_10.csv"
+last_day = 2025-01-11T15:00:00.000Z
+units = "arcsec"
+results_hist = "hist_G5_0_10.csv"
+first_day = 2025-01-01T15:00:00.000Z
+
+[stats]
+mean_colat_err = 69.97845592592593
+mean_point_err = 660.7896930555555
+mean_long_err = -0.000991111111111111
+
+[config_ang]
+tiltang_arcmin = 0.0
+wheel3ang_0_arcmin = 0.0
+panang_arcmin = 0.0
+wheel1ang_0_arcmin = 0.0
+omegaVAXang_arcmin = 0.0
+forkang_arcmin = 0.0
+wheel2ang_0_arcmin = 10.0
+zVAXang_arcmin = 0.0
+rollang_arcmin = 0.0

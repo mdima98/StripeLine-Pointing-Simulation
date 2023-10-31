@@ -11,10 +11,10 @@ first_day = 2025-01-01T15:00:00.000Z
 [stats]
 mean_colat_err = 57.91531666666667
 mean_point_err = 654.8005275462963
-std_colat_err = 413.7435878852707
-std_long_err = 506.83031981524283
+std_colat_err = 12037.505841333379
+std_long_err = 11458.095276810744
+std_point_err = 182309.53846940852
 mean_long_err = 1.574074074074074e-5
-std_point_err = 51.313276724057914
 
 [config_ang]
 tiltang_arcmin = 0.0

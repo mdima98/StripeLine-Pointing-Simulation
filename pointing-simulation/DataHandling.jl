@@ -180,24 +180,46 @@ function get_err(dirs_ideal, dirs_real, units, stats)
     # Scale and rounds results
     colat_err = round.(Int64, colat_err./units)
     long_err = round.(Int64, long_err./units)
-    point_err = round.(Int64, point_err./units)
-
-    update_stats!(colat_err, long_err, point_err, stats)    
+    point_err = round.(Int64, point_err./units) 
 
     return point_err, colat_err, long_err
 
 end
 
-function update_stats!(colat_err, long_err, point_err, stats)
+function get_stats!(hist, hist2d, stats)
 
-    stats["mean_colat_err"] = get(stats, "mean_colat_err", 0.0) + mean(colat_err)
-    stats["std_colat_err"] = get(stats, "std_colat_err", 0.0) + std(colat_err)
+    # Hist mean and std dev
+    count = 0
+    sum = 0
+    sum_sqrd = 0
+    for bin in keys(hist)
+        sum += bin*hist[bin]
+        sum_sqrd += (bin*hist[bin])^2
+        count += hist[bin]
+    end
 
-    stats["mean_long_err"] = get(stats, "mean_long_err", 0.0) + mean(long_err)
-    stats["std_long_err"] = get(stats, "std_long_err", 0.0) + std(long_err)
+    stats["mean_point_err"] = get(stats, "mean_point_err", 0.0) + sum / count
+    # stats["std_point_err"] = get(stats, "std_point_err", 0.0) + sqrt(sum_sqrd/count - (sum/count)^2)
 
-    stats["mean_point_err"] = get(stats, "mean_point_err", 0.0) + mean(point_err)
-    stats["std_point_err"] = get(stats, "std_point_err", 0.0) + std(point_err)
+    # Hist2d mean and std dev
+    count= 0
+    sum_colat = 0
+    sum_long = 0
+    sum_sqrd_colat = 0
+    sum_sqrd_long = 0
+    for (colat, long) in keys(hist2d) 
+        sum_colat += colat*hist2d[(colat,long)]
+        sum_long += long*hist2d[(colat,long)]
+        sum_sqrd_colat += (colat*hist2d[(colat,long)])^2
+        sum_sqrd_long += (long*hist2d[(colat,long)])^2
+        count += hist2d[(colat,long)]
+    end
+
+    stats["mean_colat_err"] = get(stats, "mean_colat_err", 0.0) + sum_colat / count
+    # stats["std_colat_err"] = get(stats, "std_colat_err", 0.0) + sqrt(sum_sqrd_colat/count - (sum_colat/count)^2)
+
+    stats["mean_long_err"] = get(stats, "mean_long_err", 0.0) + sum_long / count
+    # stats["std_long_err"] = get(stats, "std_long_err", 0.0) + sqrt(sum_sqrd_long/count - (sum_long/count)^2)
 
 end
 

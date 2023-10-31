@@ -1,0 +1,25 @@
+pol_name = "I1"
+ndays = 10
+start_day = 0
+datadir = "hist_tests/"
+results_hist2d = "hist2d_I1_0_10.csv"
+last_day = 2025-01-11T15:00:00.000Z
+units = "arcsec"
+results_hist = "hist_I1_0_10.csv"
+first_day = 2025-01-01T15:00:00.000Z
+
+[stats]
+mean_colat_err = 59.82737141203704
+mean_point_err = 655.6681013194444
+mean_long_err = -6.581018518518519e-5
+
+[config_ang]
+tiltang_arcmin = 0.0
+wheel3ang_0_arcmin = 0.0
+panang_arcmin = 0.0
+wheel1ang_0_arcmin = 0.0
+omegaVAXang_arcmin = 0.0
+forkang_arcmin = 0.0
+wheel2ang_0_arcmin = 10.0
+zVAXang_arcmin = 0.0
+rollang_arcmin = 0.0

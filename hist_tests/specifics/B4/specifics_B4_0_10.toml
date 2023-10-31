@@ -1,17 +1,17 @@
-pol_name = "I0"
-ndays = 30
+pol_name = "B4"
+ndays = 10
 start_day = 0
 datadir = "hist_tests/"
-results_hist2d = "hist2d_I0_0_30.csv"
-last_day = 2025-01-31T15:00:00.000Z
+results_hist2d = "hist2d_B4_0_10.csv"
+last_day = 2025-01-11T15:00:00.000Z
 units = "arcsec"
-results_hist = "hist_I0_0_30.csv"
+results_hist = "hist_B4_0_10.csv"
 first_day = 2025-01-01T15:00:00.000Z
 
 [stats]
-mean_colat_err = -0.4530648225308642
-mean_point_err = 686.264167037037
-mean_long_err = -681.6237129089507
+mean_colat_err = -0.45503189814814815
+mean_point_err = 686.2158414814814
+mean_long_err = -681.6255866435185
 
 [config_ang]
 tiltang_arcmin = 0.0
