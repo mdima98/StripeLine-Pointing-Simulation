@@ -138,7 +138,7 @@ end
 """
 This function rounds the pointing error and the dirs from genpointings to integer units of `unit`, and fills the dictonary `hist` and `hist2d`.
 """
-function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit, stats)
+function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit)
 
     units = Dict(
         "deg" => 1.,
@@ -149,7 +149,7 @@ function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit, stats)
     dirs_ideal = rad2deg.(dirs_ideal)
     dirs_real = rad2deg.(dirs_real)
     
-    point_err, colat_err, long_err = get_err(dirs_ideal, dirs_real, units[unit], stats)
+    point_err, colat_err, long_err = get_err(dirs_ideal, dirs_real, units[unit])
 
     for idx in range(1,length(point_err))
         hist[point_err[idx]] = get(hist, point_err[idx], 0) + 1
@@ -162,7 +162,7 @@ end
 """
 This function computes the colatitude, longitude and pointing error.
 """
-function get_err(dirs_ideal, dirs_real, units, stats)
+function get_err(dirs_ideal, dirs_real, units)
 
     # Normalize distribution of angles in [-180, 180)
     colat_ideal = angle_wrap180.(dirs_ideal[:,1])
