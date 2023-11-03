@@ -78,7 +78,7 @@ def plot_hist2d(specifics, fhist2d):
     g = ax.imshow(hist2d, interpolation="none", aspect="auto", origin="upper", extent=extent, label=specifics["pol_name"], cmap='viridis')
     cbar = fig.colorbar(g, label="Count")
     
-    ax.set_title(f"Angular Error Distribution ({specifics['pol_name']})")
+    title = f"Angular Error Distribution (Days {specifics['start_day']} to {specifics['start_day']+specifics['ndays']} - {specifics['pol_name']})"
+    ax.set_title(title)
     ax.set_xlabel(f"Colatitude Error [{specifics['units']}]")
     ax.set_ylabel(f"Longitude Error [{specifics['units']}]")
-    # ax.legend()
