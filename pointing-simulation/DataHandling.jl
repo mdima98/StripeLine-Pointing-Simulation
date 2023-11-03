@@ -143,7 +143,8 @@ function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit)
     units = Dict(
         "deg" => 1.,
         "arcmin" => 1. / 60.,
-        "arcsec" => 1. / 3600.
+        "arcsec" => 1. / 3600.,
+        "darcsec" => 1. / 360.
     )
 
     dirs_ideal = rad2deg.(dirs_ideal)

@@ -8,7 +8,7 @@ def main():
     specifics, fhist, fhist2d = get_data(args)
     
     # Plot data
-    plot_hist(specifics, fhist)
+    # plot_hist(specifics, fhist)
     plot_hist2d(specifics, fhist2d)
     
     plt.show()

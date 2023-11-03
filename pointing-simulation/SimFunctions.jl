@@ -88,7 +88,6 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
             pol_or,
             day_time_range,
             day;
-            # ground = true,
             config_ang = nothing
         )
         
@@ -97,7 +96,6 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
             pol_or,
             day_time_range,
             day;
-            # ground=true,
             config_ang = config_ang
         )
 
