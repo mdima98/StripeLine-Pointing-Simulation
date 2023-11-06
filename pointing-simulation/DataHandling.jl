@@ -172,8 +172,6 @@ This function computes the pointing error.
 function get_point_err(dirs_ideal, dirs_real, units)
     # point_err = compute_point_err(dirs_ideal, dirs_real) ./ units
 
-    
-    
     dirs_ideal_deg = rad2deg.(dirs_ideal)
     dirs_real_deg = rad2deg.(dirs_real)
 
@@ -298,7 +296,7 @@ function save_results(specifics, results, params)
         long_gr = getfield.(bins_gr, 2)
         freq_gr = collect(values(results["hist2d_gr"]))
 
-        # # Set missing data
+        # Set missing data
         if length(freq_eq) > length(freq_gr)
             len = length(freq_eq) - length(freq_gr)
             colat_gr = [colat_gr; fill(missing,len)]

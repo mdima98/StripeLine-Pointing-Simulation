@@ -1,4 +1,4 @@
-from scipy.sparse import csr_matrix
+from scipy.sparse import csr_matrix, coo_matrix
 from DataHandling import *
 
 
@@ -26,26 +26,19 @@ def plot_hist(specifics, fhist):
     ax.legend()
     
     
-def plot_hist2d(specifics, fhist2d):
+def plot_hist2d(specifics, fhist2d, ground):
     
     # fig, ax = plt.subplots(figsize=(8, 6), tight_layout=True)
     
-    # (colat2d, long2d, freq2d) = np.loadtxt(fhist2d, delimiter=',', unpack=True, dtype=int)
+    # (colat2d, long2d, freq2d) = np.loadtxt(fhist2d, delimiter=',', usecols=[0,1,2], unpack=True, dtype=int)
             
     
     # g = ax.scatter(colat2d,long2d,c=freq2d, marker='o', edgecolors='none', label=specifics["pol_name"], cmap='inferno')
     # cbar = fig.colorbar(g, label="Count")
     
-    # hist2d = np.loadtxt(fhist2d, delimiter=',', usecols=(0,1), dtype=int)
-    # freq2d = np.loadtxt(fhist2d, delimiter=',', usecols=2, dtype=int)
+    usecols, coord_name = ([3,4,5], "GR") if ground else ([0,1,2], "EQ")
     
-    # colat_min, colat_max = np.min(hist2d[:,1]), np.max(hist2d[:,1])
-    # long_min, long_max = np.min(hist2d[:,2]), np.max(hist2d[:,2])
-
-    
-    
-    
-    hist2d = pd.read_csv(fhist2d, names=["Colatitude", "Longitude", "Count"], header=None, usecols=[0,1,2])
+    hist2d = pd.read_csv(fhist2d, names=["colat", "long", "freq"], header=None, usecols=usecols)
     hist2d = hist2d.dropna()
     
     # Set plot axis limits
@@ -58,28 +51,40 @@ def plot_hist2d(specifics, fhist2d):
     else:
         low_bound = 0.03
         high_bound = 0.03
-        
-    low_extent = int(hist2d[['Colatitude', 'Longitude']].values.min()*(1+low_bound))
-    high_extent = int(hist2d[['Colatitude', 'Longitude']].values.max()*(1+high_bound))
-    extent = [low_extent, high_extent, low_extent, high_extent]
     
-    r = range(low_extent, high_extent)
-    hist2d = (hist2d.set_index(['Colatitude','Longitude'])['Count']
-        .unstack(fill_value=0)
-        .reindex(index=r, columns=r, fill_value=0)
-        .rename_axis(None)
-        .rename_axis(None, axis=1)
-        .T)
     
-    # hist2d = csr_matrix(hist2d.values, dtype=int)
-
-
+    colat_low = hist2d['colat'].values.min()
+    colat_high = hist2d['colat'].values.max()
+    long_low = hist2d['long'].values.min()
+    long_high = hist2d['long'].values.max()
+    
+    colat_low -= abs(colat_low)*low_bound
+    colat_high += abs(colat_high)*high_bound
+    long_low -= abs(long_low)*low_bound
+    long_high += abs(long_high)*high_bound 
+    
+    r_colat = range(int(colat_low), int(colat_high))
+    r_long = range(int(long_low), int(long_high))
+    
+    hist2d = ( hist2d.pivot(index = 'colat',columns = 'long',values = 'freq')
+            .reindex(index = r_colat, columns = r_long)
+            .fillna(0)
+            .rename_axis(columns = None,index = None).T )
+    
+    extent = [colat_low, colat_high, long_low, long_high]
+    
+    # Plot hist 2D
     fig, ax = plt.subplots(figsize=(8, 6), tight_layout=True)
 
-    g = ax.imshow(hist2d, interpolation="none", aspect="auto", origin="upper", extent=extent, label=specifics["pol_name"], cmap='viridis')
+    g = ax.imshow(hist2d, interpolation="none", aspect="auto", origin="lower", extent=extent, label=specifics["pol_name"], cmap='viridis')
     cbar = fig.colorbar(g, label="Count")
-    
+
+    # Set labels    
     title = f"Angular Error Distribution (Days {specifics['start_day']} to {specifics['start_day']+specifics['ndays']} - {specifics['pol_name']})"
     ax.set_title(title)
-    ax.set_xlabel(f"Colatitude Error [{specifics['units']}]")
-    ax.set_ylabel(f"Longitude Error [{specifics['units']}]")
+    
+    xlabel = f"Colatitude Error ({coord_name}) [{specifics['units']}]"
+    ax.set_xlabel(xlabel)
+
+    ylabel = f"Longitude Error ({coord_name}) [{specifics['units']}]"
+    ax.set_ylabel(ylabel)

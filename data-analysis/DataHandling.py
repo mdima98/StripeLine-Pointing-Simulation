@@ -108,6 +108,11 @@ def parse_commandline():
     parser.add_argument("polarimeter",
                         type=str,
                         help="Polarimeter name.")
+
+    parser.add_argument("-g", "--ground",
+                        action="store_true",
+                        help="Plot the 2D histogram using ground coordinates instead of Equatorial ones."
+                        )
     
     args = parser.parse_args()
 
