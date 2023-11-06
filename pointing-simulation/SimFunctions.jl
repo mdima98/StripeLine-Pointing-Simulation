@@ -24,7 +24,7 @@ function compute_point_err(dirs_ideal, dirs_real)
 end
 
 function compute_point_err_approx(colat_err, long_err)
-    return sqrt(colat_err^2 + long_err^2)
+    return (sqrt(colat_err^2 + long_err^2))
 end
 
 function angle_wrap360(ang)
@@ -52,6 +52,53 @@ function angle_diff(a,b)
     return dif - 180
 end
 
+function sim_ground(pol_or, day_time_range, config_ang)
+    
+    dirs_ideal_all, _ = genpointings(
+        telescope_motors,
+        pol_or,
+        day_time_range;
+        ground = true,
+        config_ang = nothing
+    )
+        
+    dirs_real_all, _ = genpointings(
+        telescope_motors,
+        pol_or,
+        day_time_range;
+        ground = true,
+        config_ang = config_ang
+    )
+
+    # Get ground dirs
+    dirs_ideal_gr = [dirs_ideal_all[:,3] dirs_ideal_all[:,4]]
+    dirs_real_gr = [dirs_real_all[:,3] dirs_real_all[:,4]]
+
+    return dirs_ideal_gr, dirs_real_gr
+
+end
+
+function sim_equatorial(pol_or, day_time_range, day, config_ang)
+
+    dirs_ideal_eq, _ = genpointings(
+        telescope_motors,
+        pol_or,
+        day_time_range,
+        day;
+        config_ang = nothing
+    )
+        
+    dirs_real_eq, _ = genpointings(
+        telescope_motors,
+        pol_or,
+        day_time_range,
+        day;
+        config_ang = config_ang
+    )
+    return dirs_ideal_eq, dirs_real_eq
+    
+end
+
 
 function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays, pol_name)
     
@@ -71,7 +118,8 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
 
     # Dict for histograms
     hist = Dict{Int64, Int64}()
-    hist2d = Dict{Tuple{Int64,Int64}, Int64}()
+    hist2d_eq = Dict{Tuple{Int64,Int64}, Int64}()
+    hist2d_gr = Dict{Tuple{Int64,Int64}, Int64}()
 
 
     # Set progress meter
@@ -83,23 +131,10 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
     # Simulate pointing for each day, compute error and update hist
     for day in sim_days
 
-        dirs_ideal, _ = genpointings(
-            telescope_motors,
-            pol_or,
-            day_time_range,
-            day;
-            config_ang = nothing
-        )
-        
-        dirs_real, _ = genpointings(
-            telescope_motors,
-            pol_or,
-            day_time_range,
-            day;
-            config_ang = config_ang
-        )
+        dirs_ideal_eq, dirs_real_eq = sim_equatorial(pol_or, day_time_range, day, config_ang)
+        dirs_ideal_gr, dirs_real_gr = sim_ground(pol_or, day_time_range, config_ang)
 
-        fill_hist!(dirs_ideal, dirs_real, hist, hist2d, params["units"])
+        fill_hist!(dirs_ideal_eq, dirs_real_eq, dirs_ideal_gr, dirs_real_gr, hist, hist2d_eq, hist2d_gr, params["units"])
 
         if params["progressbar"]
             next!(p)
@@ -121,7 +156,8 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
 
     results = Dict(
         "hist" => hist,
-        "hist2d" => hist2d
+        "hist2d_eq" => hist2d_eq,
+        "hist2d_gr" => hist2d_gr
     )
 
     save_results(specifics, results, params)

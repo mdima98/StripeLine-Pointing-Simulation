@@ -45,7 +45,8 @@ def plot_hist2d(specifics, fhist2d):
     
     
     
-    hist2d = pd.read_csv(fhist2d, names=["Colatitude", "Longitude", "Count"], dtype=int)
+    hist2d = pd.read_csv(fhist2d, names=["Colatitude", "Longitude", "Count"], header=None, usecols=[0,1,2])
+    hist2d = hist2d.dropna()
     
     # Set plot axis limits
     if specifics["units"] == "arcsec":

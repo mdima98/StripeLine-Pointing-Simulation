@@ -1,6 +1,8 @@
 using ArgParse
 using TOML
 using DelimitedFiles
+using DataFrames
+using CSV
 
 # # =========================
 # Here are some of the functions and structures needed to handle input parameters and simulation data.
@@ -136,54 +138,85 @@ function set_sim_dir(dirname, dataname, polname, cleardir)
 end
 
 """
-This function rounds the pointing error and the dirs from genpointings to integer units of `unit`, and fills the dictonary `hist` and `hist2d`.
+This function rounds the pointing error and the dirs (ground and Equatorial) from genpointings to integer units of `unit`, and fills the dictonary `hist` and `hist2d`.
 """
-function fill_hist!(dirs_ideal, dirs_real, hist, hist2d, unit)
+function fill_hist!(dirs_ideal_eq, dirs_real_eq, dirs_ideal_gr, dirs_real_gr, hist, hist2d_eq, hist2d_gr, unit)
 
     units = Dict(
         "deg" => 1.,
         "arcmin" => 1. / 60.,
         "arcsec" => 1. / 3600.,
         "darcsec" => 1. / 360.
-    )
-
-    dirs_ideal = rad2deg.(dirs_ideal)
-    dirs_real = rad2deg.(dirs_real)
+    ) 
     
-    point_err, colat_err, long_err = get_err(dirs_ideal, dirs_real, units[unit])
+    point_err = get_point_err(dirs_ideal_eq, dirs_real_eq, units[unit])
+    colat_eq_err, long_eq_err = get_coord_err(dirs_ideal_eq, dirs_real_eq, units[unit])
+    colat_gr_err, long_gr_err = get_coord_err(dirs_ideal_gr, dirs_real_gr, units[unit])
+
 
     for idx in range(1,length(point_err))
         hist[point_err[idx]] = get(hist, point_err[idx], 0) + 1
-        data2d = (colat_err[idx], long_err[idx])
-        hist2d[data2d] = get(hist2d, data2d, 0) + 1
+
+        data2d_eq = (colat_eq_err[idx], long_eq_err[idx])
+        hist2d_eq[data2d_eq] = get(hist2d_eq, data2d_eq, 0) + 1
+
+        data2d_gr = (colat_gr_err[idx], long_gr_err[idx])
+        hist2d_gr[data2d_gr] = get(hist2d_gr, data2d_gr, 0) + 1
     end
 
 end
 
 """
-This function computes the colatitude, longitude and pointing error.
+This function computes the pointing error.
 """
-function get_err(dirs_ideal, dirs_real, units)
+function get_point_err(dirs_ideal, dirs_real, units)
+    # point_err = compute_point_err(dirs_ideal, dirs_real) ./ units
+
+    
+    
+    dirs_ideal_deg = rad2deg.(dirs_ideal)
+    dirs_real_deg = rad2deg.(dirs_real)
 
     # Normalize distribution of angles in [-180, 180)
-    colat_ideal = angle_wrap180.(dirs_ideal[:,1])
-    colat_real = angle_wrap180.(dirs_real[:,1])
-    long_ideal = angle_wrap180.(dirs_ideal[:,2])
-    long_real = angle_wrap180.(dirs_real[:,2])
+    colat_ideal = angle_wrap180.(dirs_ideal_deg[:,1])
+    colat_real = angle_wrap180.(dirs_real_deg[:,1])
+    long_ideal = angle_wrap180.(dirs_ideal_deg[:,2])
+    long_real = angle_wrap180.(dirs_real_deg[:,2])
     
     # Compute angular diff and err
     colat_err = angle_diff.(colat_ideal, colat_real)
     long_err = angle_diff.(long_ideal, long_real)
-    point_err = compute_point_err_approx.(colat_err, long_err)
+    point_err = compute_point_err_approx.(colat_err, long_err) ./ units
 
-    # point_err = compute_point_err(deg2rad.(dirs_ideal), deg2rad.(dirs_real))
+    
+    point_err = round.(Int64, point_err)
+    return point_err
+   
+end
+
+"""
+This function computes the coordinates error.
+"""
+function get_coord_err(dirs_ideal, dirs_real, units)
+
+    dirs_ideal_deg = rad2deg.(dirs_ideal)
+    dirs_real_deg = rad2deg.(dirs_real)
+
+    # Normalize distribution of angles in [-180, 180)
+    colat_ideal = angle_wrap180.(dirs_ideal_deg[:,1])
+    colat_real = angle_wrap180.(dirs_real_deg[:,1])
+    long_ideal = angle_wrap180.(dirs_ideal_deg[:,2])
+    long_real = angle_wrap180.(dirs_real_deg[:,2])
+    
+    # Compute angular diff and err
+    colat_err = angle_diff.(colat_ideal, colat_real)
+    long_err = angle_diff.(long_ideal, long_real)
 
     # Scale and rounds results
     colat_err = round.(Int64, colat_err./units)
     long_err = round.(Int64, long_err./units)
-    point_err = round.(Int64, point_err./units) 
 
-    return point_err, colat_err, long_err
+    return colat_err, long_err
 
 end
 
@@ -255,10 +288,42 @@ function save_results(specifics, results, params)
     end
 
     open(fpath_hist2d, "w") do file
-        bins = collect(keys(results["hist2d"]))
-        colat = getfield.(bins, 1)
-        long = getfield.(bins, 2)
-        freq = collect(values(results["hist2d"]))
-        writedlm(file, [colat long freq], ',')
+        bins_eq = collect(keys(results["hist2d_eq"]))
+        colat_eq = getfield.(bins_eq, 1)
+        long_eq = getfield.(bins_eq, 2)
+        freq_eq = collect(values(results["hist2d_eq"]))
+
+        bins_gr = collect(keys(results["hist2d_gr"]))
+        colat_gr = getfield.(bins_gr, 1)
+        long_gr = getfield.(bins_gr, 2)
+        freq_gr = collect(values(results["hist2d_gr"]))
+
+        # # Set missing data
+        if length(freq_eq) > length(freq_gr)
+            len = length(freq_eq) - length(freq_gr)
+            colat_gr = [colat_gr; fill(missing,len)]
+            long_gr = [long_gr; fill(missing, len)]
+            freq_gr = [freq_gr; fill(missing, len)]
+
+        elseif length(freq_eq) < length(freq_gr)
+            len = length(freq_gr) - length(freq_eq)
+            colat_eq = [colat_eq; fill(missing,len)]
+            long_eq = [long_eq; fill(missing, len)]
+            freq_eq = [freq_eq; fill(missing, len)]
+        end
+
+        df = DataFrame(
+            colat_eq = colat_eq,
+            long_eq = long_eq,
+            freq_eq = freq_eq,
+            colat_gr = colat_gr,
+            long_gr = long_gr,
+            freq_gr = freq_gr
+        )
+        CSV.write(file, df; writeheader=false)
+
+        # writedlm(file, [colat_eq long_eq freq_eq], ',')
+
+
     end
 end
