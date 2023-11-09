@@ -8,7 +8,7 @@
 f_sample = 50.0   # Sampling frequency of the simulation in Hz
 datetime = 2025-01-01 15:00:00Z   # DateTime (separeted by a space charcater) when the simulation starts
 datadir = "hist_tests/"   # Directory to save simulation results
-units = "darcsec"   # Units for histogram making - Choose between "deg", "arcmin", "arcsec"
+units = "darcsec"   # Units for histogram making - Choose between "deg", "arcmin", "arcsec", "darcsec"
 cleardir = false   # Clear already existing results directories - WARNING for using it with parallel
 progressbar = true   # Show a progress bar during the simualtion 
 # ==========================================================
@@ -22,7 +22,7 @@ wheel2ang_0_arcmin = 0.0
 wheel3ang_0_arcmin = 0.0
 forkang_arcmin  = 0.0
 omegaVAXang_arcmin = 0.0
-zVAXang_arcmin = 10.0
+zVAXang_arcmin = 0.0
 panang_arcmin = 0.0
 tiltang_arcmin = 0.0
 rollang_arcmin =  0.0

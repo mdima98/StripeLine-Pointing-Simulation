@@ -50,8 +50,8 @@ def plot_hist2d(specifics, fhist2d, ground):
         low_bound = 0.20
         high_bound = 0.20
     else:
-        low_bound = 0.03
-        high_bound = 0.03
+        low_bound = 0.20
+        high_bound = 0.20
     
     
     colat_low = hist2d['colat'].values.min()

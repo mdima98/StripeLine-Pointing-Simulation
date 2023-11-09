@@ -97,10 +97,25 @@ function parse_param_file(param_file, parsed_args)
     params = toml_file["parameters"]
     config_ang_dict = toml_file["config_angles"]
 
+    # Assert available angular units
+    if params["units"] ∉ ["deg", "arcmin", "arcsec", "darcsec" ]
+        printstyled("Error: units '$(params["units"])' in parameters file '$(param_file)' does not match any available units.\n", color=:red)
+        printstyled("Available units: [deg arcmin arcsec darcsec]\n", color=:yellow)
+        exit(-1)
+    end
+
+    # Use command line config_ang if needed
     for ang in keys(parsed_args)
         if parsed_args[ang] != 0.0
             config_ang_dict[ang] = parsed_args[ang]
         end
+    end
+
+    # Assert non-zero config ang
+    if all(values(config_ang_dict) .== 0.0)
+        printstyled("Error: every configuration angle in parameters file '$(param_file)' is set to zero.\n", color=:red)
+        printstyled("At least one configuration angle must be non-zero.\n", color=:yellow)
+        exit(-1)
     end
 
     # Set the configuration angles
