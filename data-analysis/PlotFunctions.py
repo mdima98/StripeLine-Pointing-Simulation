@@ -1,12 +1,15 @@
 from scipy.sparse import csr_matrix, coo_matrix
+
 from DataHandling import *
+# from PlotOptions import *
+import matplotlib.pyplot as plt
 
 
 
 
 def plot_hist(specifics, fhist):
     
-    fig, ax = plt.subplots(figsize=(8, 6), tight_layout=True)
+    fig, ax = plt.subplots(figsize=(8,6), tight_layout=True)
     
     hist = np.loadtxt(fhist, delimiter=',', unpack=False, dtype=int)
     
@@ -71,7 +74,7 @@ def plot_hist2d(specifics, fhist2d, ground):
     extent = [colat_low, colat_high, long_low, long_high]
     
     # Plot hist 2D
-    fig, ax = plt.subplots(figsize=(8, 6), tight_layout=True)
+    fig, ax = plt.subplots(figsize=(8,6), tight_layout=True)
 
     g = ax.imshow(hist2d, interpolation="none", aspect="auto", origin="lower", extent=extent, label=specifics["pol_name"], cmap='viridis')
     cbar = fig.colorbar(g, label="Count")

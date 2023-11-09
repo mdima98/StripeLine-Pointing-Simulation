@@ -1,10 +1,10 @@
 using ArgParse
-using TOML
-using DelimitedFiles
-using DataFrames
 using CSV
+using DataFrames
+using DelimitedFiles
+using TOML
 
-# # =========================
+# =========================
 # Here are some of the functions and structures needed to handle input parameters and simulation data.
 # =========================
 
@@ -170,6 +170,7 @@ function fill_hist!(dirs_ideal_eq, dirs_real_eq, dirs_ideal_gr, dirs_real_gr, hi
     colat_gr_err, long_gr_err = get_coord_err(dirs_ideal_gr, dirs_real_gr, units[unit])
 
 
+    # Update hist dicts
     for idx in range(1,length(point_err))
         hist[point_err[idx]] = get(hist, point_err[idx], 0) + 1
 
