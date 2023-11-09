@@ -7,6 +7,7 @@ using CSV
 # # =========================
 # Here are some of the functions and structures needed to handle input parameters and simulation data.
 # =========================
+
 """
 This funtion parser command line arguments `params_file` `start_dat` `ndays` `pol_name` for the simulation.
 """
@@ -170,24 +171,15 @@ end
 This function computes the pointing error.
 """
 function get_point_err(dirs_ideal, dirs_real, units)
-    # point_err = compute_point_err(dirs_ideal, dirs_real) ./ units
 
-    dirs_ideal_deg = rad2deg.(dirs_ideal)
-    dirs_real_deg = rad2deg.(dirs_real)
+    colat_ideal = dirs_ideal[:,1]
+    colat_real = dirs_real[:,1]
+    long_ideal = dirs_ideal[:,2]
+    long_real = dirs_real[:,2]
 
-    # Normalize distribution of angles in [-180, 180)
-    colat_ideal = angle_wrap180.(dirs_ideal_deg[:,1])
-    colat_real = angle_wrap180.(dirs_real_deg[:,1])
-    long_ideal = angle_wrap180.(dirs_ideal_deg[:,2])
-    long_real = angle_wrap180.(dirs_real_deg[:,2])
-    
-    # Compute angular diff and err
-    colat_err = angle_diff.(colat_ideal, colat_real)
-    long_err = angle_diff.(long_ideal, long_real)
-    point_err = compute_point_err_approx.(colat_err, long_err) ./ units
+    point_err = compute_point_err.(colat_ideal, colat_real, long_ideal, long_real)
+    point_err = round.(Int64, point_err./units)
 
-    
-    point_err = round.(Int64, point_err)
     return point_err
    
 end
@@ -319,9 +311,6 @@ function save_results(specifics, results, params)
             freq_gr = freq_gr
         )
         CSV.write(file, df; writeheader=false)
-
-        # writedlm(file, [colat_eq long_eq freq_eq], ',')
-
 
     end
 end

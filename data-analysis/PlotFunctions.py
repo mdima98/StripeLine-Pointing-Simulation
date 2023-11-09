@@ -19,7 +19,8 @@ def plot_hist(specifics, fhist):
     
     ax.stairs(freq, bins_edges, edgecolor="b", linewidth=1.0, fill=False, label=specifics["pol_name"])
     
-    ax.set_title("Pointing Error Distribution")
+    title = f"Pointing Error Distribution (Days {specifics['start_day']} to {specifics['start_day']+specifics['ndays']} - {specifics['pol_name']})"
+    ax.set_title(title)
     ax.set_xlabel(f"Pointing Error [{specifics['units']}]")
     ax.set_yscale("log")
     ax.set_ylabel('Count')
@@ -43,8 +44,8 @@ def plot_hist2d(specifics, fhist2d, ground):
     
     # Set plot axis limits
     if specifics["units"] == "arcsec":
-        low_bound = 0.03
-        high_bound = 0.03
+        low_bound = 0.05
+        high_bound = 0.05
     elif specifics["units"] == "arcmin":
         low_bound = 0.20
         high_bound = 0.20

@@ -14,17 +14,19 @@ function telescope_motors(time_s)
    return  (0.0, deg2rad(20.0), Stripeline.timetorotang(time_s, 1.))
 end
 
-function compute_point_err(dirs_ideal, dirs_real)
-    point_err = acosd.(  sin.(dirs_ideal[:,1]) .* cos.(dirs_ideal[:,2]) .* sin.(dirs_real[:,1]) .* cos.(dirs_real[:,2]) .+
-                        sin.(dirs_ideal[:,1]) .* sin.(dirs_ideal[:,2]) .* sin.(dirs_real[:,1]) .* sin.(dirs_real[:,2]) .+
-                        cos.(dirs_ideal[:,1]) .* cos.(dirs_real[:,1])
-    )
+function compute_point_err(colat_ideal, colat_real, long_ideal, long_real)
+
+    x_ideal = sin(colat_ideal)*cos(long_ideal)
+    y_ideal = sin(colat_ideal)*sin(long_ideal)
+    z_ideal = cos(colat_ideal)
+
+    x_real = sin(colat_real)*cos(long_real)
+    y_real = sin(colat_real)*sin(long_real)
+    z_real = cos(colat_real)
+
+    point_err = acosd(x_ideal*x_real + y_ideal*y_real + z_ideal*z_real)
 
     return point_err
-end
-
-function compute_point_err_approx(colat_err, long_err)
-    return (sqrt(colat_err^2 + long_err^2))
 end
 
 function angle_wrap360(ang)
