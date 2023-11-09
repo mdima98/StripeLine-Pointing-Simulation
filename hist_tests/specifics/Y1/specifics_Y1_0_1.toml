@@ -1,20 +1,12 @@
 pol_name = "Y1"
-ndays = 1
-start_day = 0
-datadir = "hist_tests/"
+units = "darcsec"
 results_hist2d = "hist2d_Y1_0_1.csv"
+datadir = "hist_tests/"
 last_day = 2025-01-02T15:00:00.000Z
-units = "arcsec"
 results_hist = "hist_Y1_0_1.csv"
 first_day = 2025-01-01T15:00:00.000Z
-
-[stats]
-mean_colat_err = 69.97831365740741
-mean_point_err = 660.7900944444444
-std_colat_err = 408.4999614923408
-std_long_err = 518.4899094685102
-mean_long_err = 0.0010226851851851853
-std_point_err = 62.78876780846463
+ndays = 1
+start_day = 0
 
 [config_ang]
 tiltang_arcmin = 0.0
@@ -22,7 +14,7 @@ wheel3ang_0_arcmin = 0.0
 panang_arcmin = 0.0
 wheel1ang_0_arcmin = 0.0
 omegaVAXang_arcmin = 0.0
-forkang_arcmin = 0.0
+forkang_arcmin = 10.0
 wheel2ang_0_arcmin = 10.0
-zVAXang_arcmin = 0.0
+zVAXang_arcmin = 10.0
 rollang_arcmin = 0.0

@@ -43,31 +43,27 @@ def plot_hist2d(specifics, fhist2d, ground):
     hist2d = hist2d.dropna()
     
     # Set plot axis limits
-    if specifics["units"] == "arcsec":
-        low_bound = 0.05
-        high_bound = 0.05
-    elif specifics["units"] == "arcmin":
-        low_bound = 0.20
-        high_bound = 0.20
-    else:
-        low_bound = 0.20
-        high_bound = 0.20
-    
-    
     colat_low = hist2d['colat'].values.min()
     colat_high = hist2d['colat'].values.max()
     long_low = hist2d['long'].values.min()
     long_high = hist2d['long'].values.max()
     
-    colat_low -= abs(colat_low)*low_bound
-    colat_high += abs(colat_high)*high_bound
-    long_low -= abs(long_low)*low_bound
-    long_high += abs(long_high)*high_bound 
+    colat_len = colat_high - colat_low
+    long_len = long_high - long_low
+    
+    low_bound = 0.05
+    high_bound = 0.05
+    
+    colat_low -= colat_len*low_bound
+    colat_high += colat_len*high_bound
+    long_low -= long_len*low_bound
+    long_high += long_len*high_bound 
     
     r_colat = range(int(colat_low), int(colat_high))
     r_long = range(int(long_low), int(long_high))
     
-    hist2d = ( hist2d.pivot(index = 'colat',columns = 'long',values = 'freq')
+    # Set hist2d as matrix for plotting
+    hist2d = ( hist2d.pivot(index = 'colat', columns = 'long', values = 'freq')
             .reindex(index = r_colat, columns = r_long)
             .fillna(0)
             .rename_axis(columns = None,index = None).T )

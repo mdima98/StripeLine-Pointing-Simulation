@@ -18,11 +18,11 @@ progressbar = true   # Show a progress bar during the simualtion
 # Configuration angles in ARCMIN - At least one angle must be non-zero
 [config_angles]
 wheel1ang_0_arcmin = 0.0
-wheel2ang_0_arcmin = 0.0
+wheel2ang_0_arcmin = 10.0
 wheel3ang_0_arcmin = 0.0
-forkang_arcmin  = 0.0
+forkang_arcmin  = 10.0
 omegaVAXang_arcmin = 0.0
-zVAXang_arcmin = 0.0
+zVAXang_arcmin = 10.0
 panang_arcmin = 0.0
 tiltang_arcmin = 0.0
 rollang_arcmin =  0.0
