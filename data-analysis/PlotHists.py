@@ -4,8 +4,14 @@ from PlotFunctions import *
 def main():
     
     # Get data files
-    args = parse_commandline()
-    specifics, fhist, fhist2d = get_data(args)
+    args = parse_commandline_plots()
+    dargs = {
+        "datadir": args.datadir,
+        "first_day": args.first_day,
+        "last_day": args.last_day,
+        "polarimeter": args.polarimeter
+    }
+    specifics, fhist, fhist2d = get_hist_files(dargs)
     
     options = {  
         "ground": args.ground,

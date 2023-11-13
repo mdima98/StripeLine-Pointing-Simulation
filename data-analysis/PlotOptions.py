@@ -14,27 +14,27 @@ def figsize(scale):
     return fig_size
 
 
-plt.rcParams.update({
-    "pgf.texsystem": "pdflatex",
-    'text.usetex': True,         # use LaTeX to write all text
-    'pgf.rcfonts': False,
-    'font.family': 'serif',
-    "font.serif": ["Latin Modern"],                   # blank entries should cause plots to inherit fonts from the document
-    "font.sans-serif": [],
-    "font.monospace": [],
-    "axes.labelsize": 11,               # LaTeX default is 10pt font.
-    "font.size": 11,
-    "legend.fontsize": 9,               # Make the legend/label fonts a little smaller
-    "xtick.labelsize": 9,
-    "ytick.labelsize": 9,
-    "figure.figsize": figsize(0.9),     # default fig size of 0.9 textwidth
-    "figure.constrained_layout.use": True, # enable costrained layout on plots
-    "pgf.preamble": "\n".join([
-        r"\usepackage[utf8x]{inputenc}",     # use utf8 fonts becasue your computer can handle it :)
-        r"\usepackage[T1]{fontenc}",
-        r"\usepackage{lmodern}",
-     ]),
-})
+# plt.rcParams.update({
+#     "pgf.texsystem": "pdflatex",
+#     'text.usetex': True,         # use LaTeX to write all text
+#     'pgf.rcfonts': False,
+#     'font.family': 'serif',
+#     "font.serif": ["Latin Modern"],                   # blank entries should cause plots to inherit fonts from the document
+#     "font.sans-serif": [],
+#     "font.monospace": [],
+#     "axes.labelsize": 11,               # LaTeX default is 10pt font.
+#     "font.size": 11,
+#     "legend.fontsize": 9,               # Make the legend/label fonts a little smaller
+#     "xtick.labelsize": 9,
+#     "ytick.labelsize": 9,
+#     "figure.figsize": figsize(0.9),     # default fig size of 0.9 textwidth
+#     "figure.constrained_layout.use": True, # enable costrained layout on plots
+#     "pgf.preamble": "\n".join([
+#         r"\usepackage[utf8x]{inputenc}",     # use utf8 fonts becasue your computer can handle it :)
+#         r"\usepackage[T1]{fontenc}",
+#         r"\usepackage{lmodern}",
+#      ]),
+# })
 
 SAVEPATH = "../plots-images/"
 

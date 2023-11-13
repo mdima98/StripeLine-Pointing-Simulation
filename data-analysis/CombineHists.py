@@ -11,6 +11,7 @@ from DataHandling import *
 
 def main():
     
+    args = parse_commandline_combine()
     
     
     

@@ -66,29 +66,29 @@ def read_specifics(fpath_specifics):
     
     return specifics, fhist, fhist2d
 
-def get_data(args):
+def get_hist_files(dargs):
     
-    fspecifics = f"specifics_{args.polarimeter}_{args.first_day}_{args.last_day}.toml"
-    fpath_specifics = path.join(args.datadir, "specifics", args.polarimeter,fspecifics)
+    fspecifics = f"specifics_{dargs['polarimeter']}_{dargs['first_day']}_{dargs['last_day']}.toml"
+    fpath_specifics = path.join(dargs['datadir'], "specifics", dargs['polarimeter'],fspecifics)
     
     try:
         with open(fpath_specifics, 'r') as file:
             specifics = toml.load(file)
     except FileNotFoundError:
         print(colored("Error: The simulation data does not exist.", "red"))
-        print(f"Data in '{args.datadir}' must be in '{colored('hist', 'yellow')}', '{colored('hist2d', 'yellow')}' and '{colored('specifics', 'yellow')}' directories.")
+        print(f"Data in '{dargs.datadir}' must be in '{colored('hist', 'yellow')}', '{colored('hist2d', 'yellow')}' and '{colored('specifics', 'yellow')}' directories.")
         sys.exit()
     
-    fhist = f"hist_{args.polarimeter}_{args.first_day}_{args.last_day}.csv"
-    hist_file = path.join(args.datadir, "hist", args.polarimeter, fhist)
+    fhist = f"hist_{dargs['polarimeter']}_{dargs['first_day']}_{dargs['last_day']}.csv"
+    hist_file = path.join(dargs['datadir'], "hist", dargs['polarimeter'],fhist)
     
-    fhist2d = f"hist2d_{args.polarimeter}_{args.first_day}_{args.last_day}.csv"
-    hist2d_file = path.join(args.datadir, "hist2d", args.polarimeter, fhist2d)
+    fhist2d = f"hist2d_{dargs['polarimeter']}_{dargs['first_day']}_{dargs['last_day']}.csv"
+    hist2d_file = path.join(dargs['datadir'], "hist2d", dargs['polarimeter'],fhist2d)
     
     return specifics, hist_file, hist2d_file
 
 
-def parse_commandline():
+def parse_commandline_plots():
     
     parser = argparse.ArgumentParser(description="Plot hist and hist2d data from StripeLine Pointing Simulation")
     
@@ -121,4 +121,39 @@ def parse_commandline():
     args = parser.parse_args()
 
     return args
+
+def parse_commandline_combine():
     
+    parser = argparse.ArgumentParser(description="Combine two hist and hist2d from StripeLine Pointing Simulation in a single file.")
+    
+    parser.add_argument("datadir",
+                        type=str,
+                        help="Data directories.")
+    
+    parser.add_argument("first_day_1",
+                        type=int,
+                        help="First day of first simulation data.")
+    
+    parser.add_argument("last_day_1",
+                        type=int,
+                        help="Last day of first simulation data.")
+    
+    parser.add_argument("polarimeter_1",
+                        type=str,
+                        help="First Polarimeter name.")
+    
+    parser.add_argument("first_day_2",
+                        type=int,
+                        help="First day of second simulation data.")
+    
+    parser.add_argument("last_day_2",
+                        type=int,
+                        help="Last day of second simulation data.")
+    
+    parser.add_argument("polarimeter_2",
+                        type=str,
+                        help="Second Polarimeter name.")
+    
+    args = parser.parse_args()
+
+    return args
