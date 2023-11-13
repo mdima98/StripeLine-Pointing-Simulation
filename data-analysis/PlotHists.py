@@ -6,11 +6,14 @@ def main():
     # Get data files
     args = parse_commandline()
     specifics, fhist, fhist2d = get_data(args)
-    ground = args.ground
     
+    options = {  
+        "ground": args.ground,
+        "savefig": args.savefig
+    }
     # Plot data
-    plot_hist(specifics, fhist)
-    plot_hist2d(specifics, fhist2d, ground)
+    plot_hist(specifics, fhist, options)
+    plot_hist2d(specifics, fhist2d, options)
     
     plt.show()
 

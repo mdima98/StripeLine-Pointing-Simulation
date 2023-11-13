@@ -1,15 +1,18 @@
 from scipy.sparse import csr_matrix, coo_matrix
 
 from DataHandling import *
-# from PlotOptions import *
-import matplotlib.pyplot as plt
+from PlotOptions import *
 
 
 
 
-def plot_hist(specifics, fhist):
+
+def plot_hist(specifics, fhist, options):
     
-    fig, ax = plt.subplots(figsize=(8,6), tight_layout=True)
+    figsize = None if options["savefig"] else (8,6)
+    
+    fig = plt.figure(figsize=figsize)
+    ax = plt.gca()
     
     hist = np.loadtxt(fhist, delimiter=',', unpack=False, dtype=int)
     
@@ -20,17 +23,21 @@ def plot_hist(specifics, fhist):
 
     bins_edges = np.append(bins-0.5, bins[-1]+0.5)
     
-    ax.stairs(freq, bins_edges, edgecolor="b", linewidth=1.0, fill=False, label=specifics["pol_name"])
+    ax.stairs(freq, bins_edges, edgecolor=COLORS["palatinate-blue"], linewidth=1.0, fill=False, label=specifics["pol_name"])
     
-    title = f"Pointing Error Distribution (Days {specifics['start_day']} to {specifics['start_day']+specifics['ndays']} - {specifics['pol_name']})"
+    title = f"Pointing Error Distribution"
     ax.set_title(title)
     ax.set_xlabel(f"Pointing Error [{specifics['units']}]")
     ax.set_yscale("log")
     ax.set_ylabel('Count')
     ax.legend()
     
+    if options["savefig"]:
+        fname = SAVEPATH + f"point_err_distr_{specifics['start_day']}_{specifics['start_day']+specifics['ndays']}_{specifics['pol_name']}.svg"
+        plt.savefig(fname, format='svg', dpi=600)
     
-def plot_hist2d(specifics, fhist2d, ground):
+    
+def plot_hist2d(specifics, fhist2d, options):
     
     # fig, ax = plt.subplots(figsize=(8, 6), tight_layout=True)
     
@@ -40,7 +47,8 @@ def plot_hist2d(specifics, fhist2d, ground):
     # g = ax.scatter(colat2d,long2d,c=freq2d, marker='o', edgecolors='none', label=specifics["pol_name"], cmap='inferno')
     # cbar = fig.colorbar(g, label="Count")
     
-    usecols, coord_name = ([3,4,5], "GR") if ground else ([0,1,2], "EQ")
+    usecols, coord_name = ([3,4,5], "GR") if options["ground"] else ([0,1,2], "EQ")
+    figsize = None if options["savefig"] else (8,6)
     
     hist2d = pd.read_csv(fhist2d, names=["colat", "long", "freq"], header=None, usecols=usecols)
     hist2d = hist2d.dropna()
@@ -74,13 +82,14 @@ def plot_hist2d(specifics, fhist2d, ground):
     extent = [colat_low, colat_high, long_low, long_high]
     
     # Plot hist 2D
-    fig, ax = plt.subplots(figsize=(8,6), tight_layout=True)
+    fig = plt.figure(figsize=figsize)
+    ax = plt.gca()
 
     g = ax.imshow(hist2d, interpolation="none", aspect="auto", origin="lower", extent=extent, label=specifics["pol_name"], cmap='viridis')
     cbar = fig.colorbar(g, label="Count")
 
     # Set labels    
-    title = f"Angular Error Distribution (Days {specifics['start_day']} to {specifics['start_day']+specifics['ndays']} - {specifics['pol_name']})"
+    title = f"Angular Error Distribution ({specifics['pol_name']})"
     ax.set_title(title)
     
     xlabel = f"Colatitude Error ({coord_name}) [{specifics['units']}]"
@@ -88,3 +97,7 @@ def plot_hist2d(specifics, fhist2d, ground):
 
     ylabel = f"Longitude Error ({coord_name}) [{specifics['units']}]"
     ax.set_ylabel(ylabel)
+    
+    if options["savefig"]:
+        fname = SAVEPATH + f"ang_err_distr_{specifics['start_day']}_{specifics['start_day']+specifics['ndays']}_{specifics['pol_name']}.svg"
+        plt.savefig(fname, format='svg', dpi=600)

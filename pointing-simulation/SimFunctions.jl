@@ -54,13 +54,14 @@ function angle_diff(a,b)
     return dif - 180
 end
 
-function sim_ground(pol_or, day_time_range, config_ang)
+function sim_ground(pol_or, day_time_range, config_ang, day_duration_s)
     
     dirs_ideal_all, _ = genpointings(
         telescope_motors,
         pol_or,
         day_time_range;
         ground = true,
+        day_duration_s = day_duration_s,
         config_ang = nothing
     )
         
@@ -69,6 +70,7 @@ function sim_ground(pol_or, day_time_range, config_ang)
         pol_or,
         day_time_range;
         ground = true,
+        day_duration_s = day_duration_s,
         config_ang = config_ang
     )
 
@@ -134,7 +136,7 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
     for day in sim_days
 
         dirs_ideal_eq, dirs_real_eq = sim_equatorial(pol_or, day_time_range, day, config_ang)
-        dirs_ideal_gr, dirs_real_gr = sim_ground(pol_or, day_time_range, config_ang)
+        dirs_ideal_gr, dirs_real_gr = sim_ground(pol_or, day_time_range, config_ang, params["day_duration_s"])
 
         fill_hist!(dirs_ideal_eq, dirs_real_eq, dirs_ideal_gr, dirs_real_gr, hist, hist2d_eq, hist2d_gr, params["units"])
 

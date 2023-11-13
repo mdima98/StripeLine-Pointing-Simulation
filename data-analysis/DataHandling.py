@@ -113,6 +113,11 @@ def parse_commandline():
                         help="Plot the 2D histogram using ground coordinates instead of Equatorial ones."
                         )
     
+    parser.add_argument("-s", "--savefig",
+                        action="store_true",
+                        help="Save the plots to disk."
+                        )
+    
     args = parser.parse_args()
 
     return args
