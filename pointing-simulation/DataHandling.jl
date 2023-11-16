@@ -9,7 +9,7 @@ using TOML
 # =========================
 
 """
-This funtion parser command line arguments `params_file` `start_dat` `ndays` `pol_name` for the simulation.
+This funtion parser command line arguments `params_file` `start_dat` `ndays` `polarimeter` for the simulation.
 """
 function parse_commandline()
     s = ArgParseSettings()
@@ -98,7 +98,7 @@ function parse_param_file(param_file, parsed_args)
     config_ang_dict = toml_file["config_angles"]
 
     # Assert available angular units
-    if params["units"] ∉ ["deg", "arcmin", "arcsec", "darcsec" ]
+    if params["units"] ∉ ["deg", "arcmin", "arcsec", "10 arcsec" ]
         printstyled("Error: units '$(params["units"])' in parameters file '$(param_file)' does not match any available units.\n", color=:red)
         printstyled("Available units: [deg arcmin arcsec darcsec]\n", color=:yellow)
         exit(-1)
@@ -135,7 +135,7 @@ function parse_param_file(param_file, parsed_args)
 end
 
 """
-This function sets the directory for `hist` and `hist2d` results of `pol_name` simulation.
+This function sets the directory for `hist` and `hist2d` results of `polarimeter` simulation.
 """
 function set_sim_dir(dirname, dataname, polname, cleardir)
     
@@ -266,20 +266,20 @@ end
 function save_results(specifics, results, params)
 
     # Set dirs and filepaths
-    sim_dir_hist = set_sim_dir(params["datadir"], "hist", specifics["pol_name"], params["cleardir"])
-    sim_dir_hist2d = set_sim_dir(params["datadir"], "hist2d", specifics["pol_name"], params["cleardir"])
-    sim_dir_specifics = set_sim_dir(params["datadir"], "specifics", specifics["pol_name"], params["cleardir"])
+    sim_dir_hist = set_sim_dir(params["datadir"], "hist", specifics["polarimeter"], params["cleardir"])
+    sim_dir_hist2d = set_sim_dir(params["datadir"], "hist2d", specifics["polarimeter"], params["cleardir"])
+    sim_dir_specifics = set_sim_dir(params["datadir"], "specifics", specifics["polarimeter"], params["cleardir"])
 
 
-    fname_hist = "hist_$(specifics["pol_name"])_$(specifics["start_day"])_$(specifics["start_day"]+specifics["ndays"]).csv"
+    fname_hist = "hist_$(specifics["polarimeter"])_$(specifics["start_day"])_$(specifics["start_day"]+specifics["ndays"]).csv"
     fpath_hist =joinpath(sim_dir_hist, fname_hist)
     specifics["results_hist"] = fname_hist
 
-    fname_hist2d = "hist2d_$(specifics["pol_name"])_$(specifics["start_day"])_$(specifics["start_day"]+specifics["ndays"]).csv"
+    fname_hist2d = "hist2d_$(specifics["polarimeter"])_$(specifics["start_day"])_$(specifics["start_day"]+specifics["ndays"]).csv"
     fpath_hist2d =joinpath(sim_dir_hist2d, fname_hist2d)
     specifics["results_hist2d"] = fname_hist2d
 
-    fname_specifics = "specifics_$(specifics["pol_name"])_$(specifics["start_day"])_$(specifics["start_day"]+specifics["ndays"]).toml"
+    fname_specifics = "specifics_$(specifics["polarimeter"])_$(specifics["start_day"])_$(specifics["start_day"]+specifics["ndays"]).toml"
     fpath_specifics = joinpath(sim_dir_specifics, fname_specifics)
 
     # Save results

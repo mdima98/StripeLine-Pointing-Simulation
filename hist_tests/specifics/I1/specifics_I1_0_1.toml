@@ -1,11 +1,11 @@
-pol_name = "I1"
-units = "darcsec"
+units = "10 arcsec"
 results_hist2d = "hist2d_I1_0_1.csv"
 datadir = "hist_tests/"
 last_day = 2025-01-02T15:00:00.000Z
 results_hist = "hist_I1_0_1.csv"
 first_day = 2025-01-01T15:00:00.000Z
 ndays = 1
+polarimeter = "I1"
 start_day = 0
 
 [config_ang]
@@ -16,5 +16,5 @@ wheel1ang_0_arcmin = 0.0
 omegaVAXang_arcmin = 0.0
 forkang_arcmin = 10.0
 wheel2ang_0_arcmin = 10.0
-zVAXang_arcmin = 30.0
+zVAXang_arcmin = 10.0
 rollang_arcmin = 0.0

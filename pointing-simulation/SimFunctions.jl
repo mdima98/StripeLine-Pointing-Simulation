@@ -104,11 +104,11 @@ function sim_equatorial(pol_or, day_time_range, day, config_ang)
 end
 
 
-function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays, pol_name)
+function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays, polarimeter)
     
     # Get polarimeter orientation
     db = InstrumentDB()
-    pol_or = db.focalplane[pol_name].orientation
+    pol_or = db.focalplane[polarimeter].orientation
 
     # Set starting day
     dt = params["datetime"]
@@ -128,7 +128,7 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
 
     # Set progress meter
     if params["progressbar"]
-        message = "Simulating polarimeter $(pol_name) from day $(start_day) to day $(start_day+ndays)..."
+        message = "Simulating polarimeter $(polarimeter) from day $(start_day) to day $(start_day+ndays)..."
         p = Progress(length(sim_days); desc=message, dt=1.0, barglyphs=BarGlyphs("[=> ]"), barlen=50, color=:yellow, showspeed=true)
     end
 
@@ -146,7 +146,7 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
     end
 
     specifics = Dict(
-        "pol_name" => pol_name,
+        "polarimeter" => polarimeter,
         "first_day" => first_day,
         "last_day" => last_day,
         "start_day" => start_day,
