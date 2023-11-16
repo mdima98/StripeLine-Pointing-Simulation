@@ -61,8 +61,8 @@ def read_specifics(fpath_specifics):
     with open(fpath_specifics, 'r') as file:
         specifics = toml.load(file)
     
-    fhist = path.join(specifics["datadir"], specifics["pol_name"], specifics["results_hist"])
-    fhist2d = path.join(specifics["datadir"], specifics["pol_name"], specifics["results_hist2d"])
+    fhist = path.join(specifics["datadir"], specifics["polarimeter"], specifics["results_hist"])
+    fhist2d = path.join(specifics["datadir"], specifics["polarimeter"], specifics["results_hist2d"])
     
     return specifics, fhist, fhist2d
 

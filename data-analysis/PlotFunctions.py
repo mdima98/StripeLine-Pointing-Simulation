@@ -23,7 +23,7 @@ def plot_hist(specifics, fhist, options):
 
     bins_edges = np.append(bins-0.5, bins[-1]+0.5)
     
-    ax.stairs(freq, bins_edges, edgecolor=COLORS["palatinate-blue"], linewidth=1.0, fill=False, label=specifics["pol_name"])
+    ax.stairs(freq, bins_edges, edgecolor=COLORS["palatinate-blue"], linewidth=1.0, fill=False, label=specifics["polarimeter"])
     
     title = f"Pointing Error Distribution"
     ax.set_title(title)
@@ -33,7 +33,7 @@ def plot_hist(specifics, fhist, options):
     ax.legend()
     
     if options["savefig"]:
-        name = f"point_err_distr_{specifics['start_day']}_{specifics['start_day']+specifics['ndays']}_{specifics['pol_name']}.svg"
+        name = f"point_err_distr_{specifics['start_day']}_{specifics['start_day']+specifics['ndays']}_{specifics['polarimeter']}.svg"
         fname = SAVEPATH + name
         plt.savefig(fname, format='svg', dpi=600)
     
@@ -45,7 +45,7 @@ def plot_hist2d(specifics, fhist2d, options):
     # (colat2d, long2d, freq2d) = np.loadtxt(fhist2d, delimiter=',', usecols=[0,1,2], unpack=True, dtype=int)
             
     
-    # g = ax.scatter(colat2d,long2d,c=freq2d, marker='o', edgecolors='none', label=specifics["pol_name"], cmap='inferno')
+    # g = ax.scatter(colat2d,long2d,c=freq2d, marker='o', edgecolors='none', label=specifics["polarimeter"], cmap='inferno')
     # cbar = fig.colorbar(g, label="Count")
     
     usecols, coord_name = ([3,4,5], "GR") if options["ground"] else ([0,1,2], "EQ")
@@ -86,11 +86,11 @@ def plot_hist2d(specifics, fhist2d, options):
     fig = plt.figure(figsize=figsize)
     ax = plt.gca()
 
-    g = ax.imshow(hist2d, interpolation="none", aspect="auto", origin="lower", extent=extent, label=specifics["pol_name"], cmap='viridis')
+    g = ax.imshow(hist2d, interpolation="none", aspect="auto", origin="lower", extent=extent, label=specifics["polarimeter"], cmap='viridis')
     cbar = fig.colorbar(g, label="Count")
 
     # Set labels    
-    title = f"Angular Error Distribution ({specifics['pol_name']})"
+    title = f"Angular Error Distribution ({specifics['polarimeter']})"
     ax.set_title(title)
     
     xlabel = f"Colatitude Error ({coord_name}) [{specifics['units']}]"
@@ -100,6 +100,6 @@ def plot_hist2d(specifics, fhist2d, options):
     ax.set_ylabel(ylabel)
     
     if options["savefig"]:
-        name = f"ang_err_distr_{coord_name}_{specifics['start_day']}_{specifics['start_day']+specifics['ndays']}_{specifics['pol_name']}.svg"
+        name = f"ang_err_distr_{coord_name}_{specifics['start_day']}_{specifics['start_day']+specifics['ndays']}_{specifics['polarimeter']}.svg"
         fname = SAVEPATH + name
         plt.savefig(fname, format='svg', dpi=600)
