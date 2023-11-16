@@ -9,7 +9,7 @@ f_sample = 50.0   # Sampling frequency of the simulation in Hz
 datetime = 2025-01-01 15:00:00Z   # DateTime (separeted by a space charcater) when the simulation starts
 day_duration_s = 86401.0   # Day duration in seconds, for ground coords in genpointings
 datadir = "hist_tests/"   # Directory to save simulation results
-units = "darcsec"   # Units for histogram making - Choose between "deg", "arcmin", "arcsec", "darcsec"
+units = "10 arcsec"   # Units for histogram making - Choose between "deg", "arcmin", "arcsec", "10 arcsec"
 cleardir = false   # Clear already existing results directories - WARNING for using it with parallel
 progressbar = true   # Show a progress bar during the simualtion 
 # ==========================================================

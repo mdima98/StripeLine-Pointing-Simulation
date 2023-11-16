@@ -33,7 +33,8 @@ def plot_hist(specifics, fhist, options):
     ax.legend()
     
     if options["savefig"]:
-        fname = SAVEPATH + f"point_err_distr_{specifics['start_day']}_{specifics['start_day']+specifics['ndays']}_{specifics['pol_name']}.svg"
+        name = f"point_err_distr_{specifics['start_day']}_{specifics['start_day']+specifics['ndays']}_{specifics['pol_name']}.svg"
+        fname = SAVEPATH + name
         plt.savefig(fname, format='svg', dpi=600)
     
     
@@ -99,5 +100,6 @@ def plot_hist2d(specifics, fhist2d, options):
     ax.set_ylabel(ylabel)
     
     if options["savefig"]:
-        fname = SAVEPATH + f"ang_err_distr_{specifics['start_day']}_{specifics['start_day']+specifics['ndays']}_{specifics['pol_name']}.svg"
+        name = f"ang_err_distr_{coord_name}_{specifics['start_day']}_{specifics['start_day']+specifics['ndays']}_{specifics['pol_name']}.svg"
+        fname = SAVEPATH + name
         plt.savefig(fname, format='svg', dpi=600)

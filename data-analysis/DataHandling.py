@@ -75,7 +75,7 @@ def get_hist_files(dargs):
         with open(fpath_specifics, 'r') as file:
             specifics = toml.load(file)
     except FileNotFoundError:
-        print(colored("Error: The simulation data does not exist.", "red"))
+        print(colored("ERROR: The simulation data does not exist.", "red"))
         print(f"Data in '{dargs.datadir}' must be in '{colored('hist', 'yellow')}', '{colored('hist2d', 'yellow')}' and '{colored('specifics', 'yellow')}' directories.")
         sys.exit()
     

@@ -162,7 +162,7 @@ function fill_hist!(dirs_ideal_eq, dirs_real_eq, dirs_ideal_gr, dirs_real_gr, hi
         "deg" => 1.,
         "arcmin" => 1. / 60.,
         "arcsec" => 1. / 3600.,
-        "darcsec" => 1. / 360.
+        "10 arcsec" => 1. / 360.
     ) 
     
     point_err = get_point_err(dirs_ideal_eq, dirs_real_eq, units[unit])
