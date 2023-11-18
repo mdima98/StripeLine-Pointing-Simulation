@@ -26,15 +26,15 @@ function parse_commandline()
             arg_type = Int
             required = true
 
-        "ndays"
+        "polarimeter"
+        help = "The polarimeter to simulate."
+        arg_type = String
+        required = true
+
+        "--ndays", "-n"
             help = "How many days the simulation will last."
             arg_type = Int
-            required = true
-
-        "polarimeter"
-            help = "The polarimeter to simulate."
-            arg_type = String
-            required = true
+            default = 1
 
         "--wheel1ang_0_arcmin"
             help = "Value of boresight motor configuration angle."

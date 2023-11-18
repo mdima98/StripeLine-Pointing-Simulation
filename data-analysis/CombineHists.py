@@ -1,14 +1,8 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import sys
 import toml
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 from DataHandling import *
-
-
-
-
 
 def main():
     
