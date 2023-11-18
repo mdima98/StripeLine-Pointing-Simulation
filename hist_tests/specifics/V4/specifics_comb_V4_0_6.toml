@@ -1,0 +1,9 @@
+units = "10 arcsec"
+datadir = "hist_tests"
+first_day = 2025-01-01T15:00:00Z
+last_day = 2025-01-06T15:00:00Z
+result_hist = "hist_comb_V4_0_6.csv"
+result_hist2d = "hist2d_comb_V4_0_6.csv"
+polarimeter = "V4"
+start_day = 0
+ndays = 5

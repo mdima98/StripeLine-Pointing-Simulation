@@ -11,7 +11,7 @@ def main():
         "last_day": args.last_day,
         "polarimeter": args.polarimeter
     }
-    specifics, fhist, fhist2d = get_hist_files(dargs)
+    specifics, fhist, fhist2d = get_hist_files(dargs, args.combined)
     
     options = {  
         "ground": args.ground,

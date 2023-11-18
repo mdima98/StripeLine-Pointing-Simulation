@@ -6,7 +6,15 @@ from os import path
 import argparse
 from termcolor import colored
 
-polarimeters = ["I0", "I1", "V4"]
+POLARIMETERS = [
+    "I0", "I1", "I2", "I3", "I4", "I5", "I6",
+    "B0", "B1", "B2", "B3", "B4", "B5", "B6",
+    "V0", "V1", "V2", "V3", "V4", "V5", "V6",
+    "R0", "R1", "R2", "R3", "R4", "R5", "R6",
+    "O0", "O1", "O2", "O3", "O4", "O5", "O6",
+    "Y0", "Y1", "Y2", "Y3", "Y4", "Y5", "Y6",
+    "G0", "G1", "G2", "G3", "G4", "G5", "G6"
+]
 
 def read_hist_file(fname):
     
@@ -66,9 +74,10 @@ def read_specifics(fpath_specifics):
     
     return specifics, fhist, fhist2d
 
-def get_hist_files(dargs):
+def get_hist_files(dargs, comb):
     
-    fspecifics = f"specifics_{dargs['polarimeter']}_{dargs['first_day']}_{dargs['last_day']}.toml"
+    comb = "comb_" if comb else "" 
+    fspecifics = f"specifics_{comb}{dargs['polarimeter']}_{dargs['first_day']}_{dargs['last_day']}.toml"
     fpath_specifics = path.join(dargs['datadir'], "specifics", dargs['polarimeter'],fspecifics)
     
     try:
@@ -76,13 +85,13 @@ def get_hist_files(dargs):
             specifics = toml.load(file)
     except FileNotFoundError:
         print(colored("ERROR: The simulation data does not exist.", "red"))
-        print(f"Data in '{dargs.datadir}' must be in '{colored('hist', 'yellow')}', '{colored('hist2d', 'yellow')}' and '{colored('specifics', 'yellow')}' directories.")
+        print(f"Data in '{dargs['datadir']}' must be in '{colored('hist', 'yellow')}', '{colored('hist2d', 'yellow')}' and '{colored('specifics', 'yellow')}' directories.")
         sys.exit()
     
-    fhist = f"hist_{dargs['polarimeter']}_{dargs['first_day']}_{dargs['last_day']}.csv"
+    fhist = f"hist_{comb}{dargs['polarimeter']}_{dargs['first_day']}_{dargs['last_day']}.csv"
     hist_file = path.join(dargs['datadir'], "hist", dargs['polarimeter'],fhist)
     
-    fhist2d = f"hist2d_{dargs['polarimeter']}_{dargs['first_day']}_{dargs['last_day']}.csv"
+    fhist2d = f"hist2d_{comb}{dargs['polarimeter']}_{dargs['first_day']}_{dargs['last_day']}.csv"
     hist2d_file = path.join(dargs['datadir'], "hist2d", dargs['polarimeter'],fhist2d)
     
     return specifics, hist_file, hist2d_file
@@ -118,6 +127,11 @@ def parse_commandline_plots():
                         help="Save the plots to disk."
                         )
     
+    parser.add_argument("-c", "--combined",
+                        action="store_true",
+                        help="Enable this option to plot combined histograms."
+                        )
+    
     args = parser.parse_args()
 
     return args
@@ -130,29 +144,17 @@ def parse_commandline_combine():
                         type=str,
                         help="Data directories.")
     
-    parser.add_argument("first_day_1",
+    parser.add_argument("first_day",
                         type=int,
-                        help="First day of first simulation data.")
+                        help="First day of simulation data.")
     
-    parser.add_argument("last_day_1",
+    parser.add_argument("last_day",
                         type=int,
-                        help="Last day of first simulation data.")
+                        help="Last day of simulation data.")
     
-    parser.add_argument("polarimeter_1",
+    parser.add_argument("polarimeter",
                         type=str,
-                        help="First Polarimeter name.")
-    
-    parser.add_argument("first_day_2",
-                        type=int,
-                        help="First day of second simulation data.")
-    
-    parser.add_argument("last_day_2",
-                        type=int,
-                        help="Last day of second simulation data.")
-    
-    parser.add_argument("polarimeter_2",
-                        type=str,
-                        help="Second Polarimeter name.")
+                        help="Polarimeter name.")
     
     args = parser.parse_args()
 
