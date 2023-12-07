@@ -86,12 +86,13 @@ def get_hist_files(dargs, comb):
     except FileNotFoundError:
         print(colored("ERROR: The simulation data does not exist.", "red"))
         print(f"Data in '{dargs['datadir']}' must be in '{colored('hist', 'yellow')}', '{colored('hist2d', 'yellow')}' and '{colored('specifics', 'yellow')}' directories.")
+        print(f"To plot combined histograms, launch the program '{colored('PlotHists.py', 'yellow')}' with '{colored('-c', 'yellow')}' option")
         sys.exit()
     
-    fhist = f"hist_{comb}{dargs['polarimeter']}_{dargs['first_day']}_{dargs['last_day']}.csv"
+    fhist = specifics["results_hist"]
     hist_file = path.join(dargs['datadir'], "hist", dargs['polarimeter'],fhist)
     
-    fhist2d = f"hist2d_{comb}{dargs['polarimeter']}_{dargs['first_day']}_{dargs['last_day']}.csv"
+    fhist2d = specifics["results_hist2d"]
     hist2d_file = path.join(dargs['datadir'], "hist2d", dargs['polarimeter'],fhist2d)
     
     return specifics, hist_file, hist2d_file

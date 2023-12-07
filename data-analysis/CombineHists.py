@@ -111,11 +111,11 @@ def save_hist_comb(hist_comb, hist2d_comb, args, days, specifics_first):
         "datadir": args.datadir,
         "first_day": specifics_first["first_day"],
         "last_day": specifics_first["first_day"] + timedelta(days=int(days[-1])),
-        "result_hist": fhist,
-        "result_hist2d": fhist2d,
+        "results_hist": fhist,
+        "results_hist2d": fhist2d,
         "polarimeter": args.polarimeter,
         "start_day": args.first_day,
-        "ndays": len(days)
+        "ndays": len(days) + 1
     }
     
     fspecifics = f"specifics_comb_{args.polarimeter}_{days[0] - 1}_{days[-1] + 1}.toml"
