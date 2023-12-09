@@ -36,47 +36,47 @@ function parse_commandline()
             arg_type = Int
             default = 1
 
-        "--wheel1ang_0_arcmin"
+        "--wheel1ang_0_arcsec"
             help = "Value of boresight motor configuration angle."
             arg_type = Float64
             default = 0.0
 
-        "--wheel2ang_0_arcmin"
+        "--wheel2ang_0_arcsec"
             help = "Value of altitude motor configuration angle."
             arg_type = Float64
             default = 0.0
 
-        "--wheel3ang_0_arcmin"
+        "--wheel3ang_0_arcsec"
             help = "Value of ground motor configuration angle. Overrides the parameters file configuration angle."
             arg_type = Float64
             default = 0.0
 
-        "--forkang_arcmin"
+        "--forkang_arcsec"
             help = "Deviation of orthogonality between H-Axis and V-Axis. Overrides the parameters file configuration angle."
             arg_type = Float64
             default = 0.0
 
-        "--omegaVAXang_arcmin"
+        "--omegaVAXang_arcsec"
             help = "Deviation of V-Axis from local vertical (azimuth of ascending node). Overrides the parameters file configuration angle."
             arg_type = Float64
             default = 0.0
 
-        "--zVAXang_arcmin"
+        "--zVAXang_arcsec"
             help = "Deviation of V-Axis from local vertical. Overrides the parameters file configuration angle."
             arg_type = Float64
             default = 0.0
 
-        "--panang_arcmin"
+        "--panang_arcsec"
             help = "Camera orientation around the x axis. Overrides the parameters file configuration angle."
             arg_type = Float64
             default = 0.0
 
-        "--tiltang_arcmin"
+        "--tiltang_arcsec"
             help = "Camera orientation around the y axis. Overrides the parameters file configuration angle."
             arg_type = Float64
             default = 0.0
 
-        "--rollang_arcmin"
+        "--rollang_arcsec"
             help = "Camera orientation around the z axis. Overrides the parameters file configuration angle."
             arg_type = Float64
             default = 0.0
@@ -120,15 +120,15 @@ function parse_param_file(param_file, parsed_args)
 
     # Set the configuration angles
     config_ang = Stripeline.configuration_angles(
-    wheel1ang_0_rad  = deg2rad(config_ang_dict["wheel1ang_0_arcmin"]/60.),
-    wheel2ang_0_rad  = deg2rad(config_ang_dict["wheel2ang_0_arcmin"]/60.),
-    wheel3ang_0_rad  = deg2rad(config_ang_dict["wheel3ang_0_arcmin"]/60.),
-    forkang_rad  = deg2rad(config_ang_dict["forkang_arcmin"]/60.),
-    omegaVAXang_rad  = deg2rad(config_ang_dict["omegaVAXang_arcmin"]/60.),
-    zVAXang_rad  = deg2rad(config_ang_dict["zVAXang_arcmin"]/60.),
-    panang_rad  = deg2rad(config_ang_dict["panang_arcmin"]/60.),
-    tiltang_rad  = deg2rad(config_ang_dict["tiltang_arcmin"]/60.),
-    rollang_rad  = deg2rad(config_ang_dict["rollang_arcmin"]/60.)  
+    wheel1ang_0_rad  = deg2rad(config_ang_dict["wheel1ang_0_arcsec"]/3600.),
+    wheel2ang_0_rad  = deg2rad(config_ang_dict["wheel2ang_0_arcsec"]/3600.),
+    wheel3ang_0_rad  = deg2rad(config_ang_dict["wheel3ang_0_arcsec"]/3600.),
+    forkang_rad  = deg2rad(config_ang_dict["forkang_arcsec"]/3600.),
+    omegaVAXang_rad  = deg2rad(config_ang_dict["omegaVAXang_arcsec"]/3600.),
+    zVAXang_rad  = deg2rad(config_ang_dict["zVAXang_arcsec"]/3600.),
+    panang_rad  = deg2rad(config_ang_dict["panang_arcsec"]/3600.),
+    tiltang_rad  = deg2rad(config_ang_dict["tiltang_arcsec"]/3600.),
+    rollang_rad  = deg2rad(config_ang_dict["rollang_arcsec"]/3600.)  
     )
     
     return params, config_ang_dict, config_ang

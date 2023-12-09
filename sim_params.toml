@@ -16,15 +16,15 @@ progressbar = false   # Show a progress bar during the simualtion
 
 
 # ==========================================================
-# Configuration angles in ARCMIN - At least one angle must be non-zero
+# Configuration angles in arcsec - At least one angle must be non-zero
 [config_angles]
-wheel1ang_0_arcmin = 0.0
-wheel2ang_0_arcmin = 10.0
-wheel3ang_0_arcmin = 0.0
-forkang_arcmin  = 10.0
-omegaVAXang_arcmin = 0.0
-zVAXang_arcmin = 10.0
-panang_arcmin = 0.0
-tiltang_arcmin = 0.0
-rollang_arcmin =  0.0
+wheel1ang_0_arcsec = 0.0
+wheel2ang_0_arcsec = 10.0
+wheel3ang_0_arcsec = 0.0
+forkang_arcsec  = 10.0
+omegaVAXang_arcsec = 0.0
+zVAXang_arcsec = 10.0
+panang_arcsec = 0.0
+tiltang_arcsec = 0.0
+rollang_arcsec =  0.0
 # ==========================================================
