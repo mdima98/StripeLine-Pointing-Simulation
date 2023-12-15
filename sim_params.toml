@@ -9,7 +9,7 @@ f_sample = 50.0   # Sampling frequency of the simulation in Hz
 datetime = 2025-01-01 15:00:00Z   # DateTime (separeted by a space charcater) when the simulation starts
 day_duration_s = 86401.0   # Day duration in seconds, for ground coords in genpointings
 datadir = "hist_tests/"   # Directory to save simulation results
-units = "10 arcsec"   # Units for histogram making - Choose between "deg", "arcmin", "arcsec", "10 arcsec"
+units = "arcsec"   # Units for histogram making - Choose between "deg", "arcmin", "arcsec", "10 arcsec"
 cleardir = false   # Clear already existing results directories - WARNING for using it with parallel
 progressbar = false   # Show a progress bar during the simualtion 
 # ==========================================================
@@ -18,13 +18,13 @@ progressbar = false   # Show a progress bar during the simualtion
 # ==========================================================
 # Configuration angles in arcsec - At least one angle must be non-zero
 [config_angles]
-wheel1ang_0_arcsec = 0.0
-wheel2ang_0_arcsec = 10.0
-wheel3ang_0_arcsec = 0.0
-forkang_arcsec  = 10.0
-omegaVAXang_arcsec = 0.0
-zVAXang_arcsec = 10.0
-panang_arcsec = 0.0
-tiltang_arcsec = 0.0
-rollang_arcsec =  0.0
+wheel1ang_0_arcsec = 187.0
+wheel2ang_0_arcsec = 15.0
+wheel3ang_0_arcsec = -123.0
+forkang_arcsec  = 18.0
+omegaVAXang_arcsec = -40.0
+zVAXang_arcsec = -16.0
+panang_arcsec = 50.0
+tiltang_arcsec = -176.0
+rollang_arcsec =  102.0
 # ==========================================================

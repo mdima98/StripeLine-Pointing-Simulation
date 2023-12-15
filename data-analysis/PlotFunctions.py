@@ -54,6 +54,10 @@ def plot_hist2d(specifics, fhist2d, options):
     hist2d = pd.read_csv(fhist2d, names=["colat", "long", "freq"], header=None, usecols=usecols)
     hist2d = hist2d.dropna()
     
+    freq_max = hist2d["freq"].values.max()
+    freq_min = hist2d["freq"].values.min()
+    
+    
     # Set plot axis limits
     colat_low = hist2d['colat'].values.min()
     colat_high = hist2d['colat'].values.max()
@@ -77,7 +81,7 @@ def plot_hist2d(specifics, fhist2d, options):
     # Set hist2d as matrix for plotting
     hist2d = ( hist2d.pivot(index = 'colat', columns = 'long', values = 'freq')
             .reindex(index = r_colat, columns = r_long)
-            .fillna(0)
+            .fillna(1)
             .rename_axis(columns = None,index = None).T )
     
     extent = [colat_low, colat_high, long_low, long_high]
@@ -86,17 +90,22 @@ def plot_hist2d(specifics, fhist2d, options):
     fig = plt.figure(figsize=figsize)
     ax = plt.gca()
 
-    g = ax.imshow(hist2d, interpolation="none", aspect="auto", origin="lower", extent=extent, label=specifics["polarimeter"], cmap='viridis')
+    g = ax.imshow(hist2d, interpolation="none", aspect="auto", origin="lower",
+                  extent=extent,
+                  label=specifics["polarimeter"],
+                  cmap='viridis',
+                  norm=matplotlib.colors.LogNorm(vmin=freq_min, vmax=freq_max))
     cbar = fig.colorbar(g, label="Count")
+    # cbar.formatter.set_powerlimits((0, 0))
 
     # Set labels    
     title = f"Angular Error Distribution ({specifics['polarimeter']})"
     ax.set_title(title)
     
-    xlabel = f"Colatitude Error ({coord_name}) [{specifics['units']}]"
+    xlabel =  f"Zenithal Distance Error [{specifics['units']}]" if options["ground"] else f"Colatitude Error [{specifics['units']}]"
     ax.set_xlabel(xlabel)
 
-    ylabel = f"Longitude Error ({coord_name}) [{specifics['units']}]"
+    ylabel = f"Azimuth Error [{specifics['units']}]" if options["ground"] else f"Longitude Error [{specifics['units']}]"
     ax.set_ylabel(ylabel)
     
     if options["savefig"]:

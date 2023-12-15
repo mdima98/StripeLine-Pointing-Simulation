@@ -1,20 +1,20 @@
-pol_name = "Y1"
-units = "darcsec"
+units = "arcsec"
 results_hist2d = "hist2d_Y1_0_1.csv"
 datadir = "hist_tests/"
 last_day = 2025-01-02T15:00:00.000Z
 results_hist = "hist_Y1_0_1.csv"
 first_day = 2025-01-01T15:00:00.000Z
 ndays = 1
+polarimeter = "Y1"
 start_day = 0
 
 [config_ang]
-tiltang_arcmin = 0.0
-wheel3ang_0_arcmin = 0.0
-panang_arcmin = 0.0
-wheel1ang_0_arcmin = 0.0
-omegaVAXang_arcmin = 0.0
-forkang_arcmin = 10.0
-wheel2ang_0_arcmin = 10.0
-zVAXang_arcmin = 10.0
-rollang_arcmin = 0.0
+tiltang_arcsec = -176.0
+wheel1ang_0_arcsec = 187.0
+wheel3ang_0_arcsec = -123.0
+zVAXang_arcsec = -16.0
+wheel2ang_0_arcsec = 15.0
+rollang_arcsec = 102.0
+panang_arcsec = 50.0
+forkang_arcsec = 18.0
+omegaVAXang_arcsec = -40.0

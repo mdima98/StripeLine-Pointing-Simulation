@@ -98,7 +98,7 @@ function parse_param_file(param_file, parsed_args)
     config_ang_dict = toml_file["config_angles"]
 
     # Assert available angular units
-    if params["units"] ∉ ["deg", "arcmin", "arcsec", "10 arcsec" ]
+    if params["units"] ∉ ["deg", "arcmin", "arcsec", "5 arcsec", "10 arcsec" ]
         printstyled("Error: units '$(params["units"])' in parameters file '$(param_file)' does not match any available units.\n", color=:red)
         printstyled("Available units: [deg arcmin arcsec darcsec]\n", color=:yellow)
         exit(-1)
@@ -128,7 +128,7 @@ function parse_param_file(param_file, parsed_args)
     zVAXang_rad  = deg2rad(config_ang_dict["zVAXang_arcsec"]/3600.),
     panang_rad  = deg2rad(config_ang_dict["panang_arcsec"]/3600.),
     tiltang_rad  = deg2rad(config_ang_dict["tiltang_arcsec"]/3600.),
-    rollang_rad  = deg2rad(config_ang_dict["rollang_arcsec"]/3600.)  
+    rollang_rad  = deg2rad(config_ang_dict["rollang_arcsec"]/3600.)
     )
     
     return params, config_ang_dict, config_ang
@@ -162,6 +162,7 @@ function fill_hist!(dirs_ideal_eq, dirs_real_eq, dirs_ideal_gr, dirs_real_gr, hi
         "deg" => 1.,
         "arcmin" => 1. / 60.,
         "arcsec" => 1. / 3600.,
+        "5 arcsec" => 1. / 720.,
         "10 arcsec" => 1. / 360.
     ) 
     
