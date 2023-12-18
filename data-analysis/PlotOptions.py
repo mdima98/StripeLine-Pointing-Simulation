@@ -38,6 +38,10 @@ def figsize(scale):
 
 SAVEPATH = "../plots-images/"
 
+def savefig(name):
+    fname = SAVEPATH + name + ".svg"
+    plt.savefig(fname, format='svg', dpi=600)
+
 COLORS = {
     "tekhelet": "#573280",
     "persian-green": "#1B998B",

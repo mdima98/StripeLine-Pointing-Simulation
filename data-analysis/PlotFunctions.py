@@ -39,20 +39,17 @@ def plot_hist(specifics, fhist, options):
     
     
 def plot_hist2d(specifics, fhist2d, options):
-    
-    # fig, ax = plt.subplots(figsize=(8, 6), tight_layout=True)
-    
-    # (colat2d, long2d, freq2d) = np.loadtxt(fhist2d, delimiter=',', usecols=[0,1,2], unpack=True, dtype=int)
-            
-    
-    # g = ax.scatter(colat2d,long2d,c=freq2d, marker='o', edgecolors='none', label=specifics["polarimeter"], cmap='inferno')
-    # cbar = fig.colorbar(g, label="Count")
-    
+
     usecols, coord_name = ([3,4,5], "GR") if options["ground"] else ([0,1,2], "EQ")
     figsize = None if options["savefig"] else (8,6)
     
-    hist2d = pd.read_csv(fhist2d, names=["colat", "long", "freq"], header=None, usecols=usecols)
-    hist2d = hist2d.dropna()
+    hist2d = pd.read_csv(fhist2d, names=["colat", "long", "freq"],
+                         header=None, usecols=usecols).dropna()
+    
+    if options["ground"]:
+        hist2d.long *= np.sin(np.deg2rad(20.))
+    
+    
     
     freq_max = hist2d["freq"].values.max()
     freq_min = hist2d["freq"].values.min()
@@ -81,7 +78,7 @@ def plot_hist2d(specifics, fhist2d, options):
     # Set hist2d as matrix for plotting
     hist2d = ( hist2d.pivot(index = 'colat', columns = 'long', values = 'freq')
             .reindex(index = r_colat, columns = r_long)
-            .fillna(1)
+            .fillna(0)
             .rename_axis(columns = None,index = None).T )
     
     extent = [colat_low, colat_high, long_low, long_high]
@@ -94,9 +91,10 @@ def plot_hist2d(specifics, fhist2d, options):
                   extent=extent,
                   label=specifics["polarimeter"],
                   cmap='viridis',
-                  norm=matplotlib.colors.LogNorm(vmin=freq_min, vmax=freq_max))
+                  norm=matplotlib.colors.LogNorm(vmin=freq_min, vmax=freq_max, clip=True))
+    # formatter = matplotlib.ticker.LogFormatter(10, labelOnlyBase=True) 
+    # tick = None
     cbar = fig.colorbar(g, label="Count")
-    # cbar.formatter.set_powerlimits((0, 0))
 
     # Set labels    
     title = f"Angular Error Distribution ({specifics['polarimeter']})"
@@ -109,6 +107,5 @@ def plot_hist2d(specifics, fhist2d, options):
     ax.set_ylabel(ylabel)
     
     if options["savefig"]:
-        name = f"ang_err_distr_{coord_name}_{specifics['start_day']}_{specifics['start_day']+specifics['ndays']}_{specifics['polarimeter']}.svg"
-        fname = SAVEPATH + name
-        plt.savefig(fname, format='svg', dpi=600)
+        name = title.replace(" ", "_")
+        savefig(name)

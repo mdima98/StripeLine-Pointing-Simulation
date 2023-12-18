@@ -145,6 +145,10 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
         end
     end
 
+    # Get centorid and scanning radius
+    colat_c_eq, long_c_eq, r_scan_eq = get_centroid_radius(hist2d_eq)
+    colat_c_gr, long_c_gr, r_scan_gr = get_centroid_radius(hist2d_gr) 
+
     specifics = Dict(
         "polarimeter" => polarimeter,
         "first_day" => first_day,
@@ -155,7 +159,13 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
         "config_ang" => config_ang_dict,
         "results_hist" => "",
         "results_hist2d" => "",
-        "datadir" => params["datadir"]
+        "datadir" => params["datadir"],
+        "colat_c_eq" => colat_c_eq,
+        "long_c_eq" => long_c_eq,
+        "colat_c_gr" => colat_c_gr,
+        "long_c_gr" => long_c_gr,
+        "r_scan_eq" => r_scan_eq,
+        "r_scan_gr" => r_scan_gr
     )
 
     results = Dict(

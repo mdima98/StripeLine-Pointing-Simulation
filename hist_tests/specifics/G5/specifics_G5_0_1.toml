@@ -1,4 +1,4 @@
-pol_name = "G5"
+polarimeter = "G5"
 units = "darcsec"
 results_hist2d = "hist2d_G5_0_1.csv"
 datadir = "hist_tests/"

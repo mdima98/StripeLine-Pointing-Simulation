@@ -19,7 +19,7 @@ progressbar = false   # Show a progress bar during the simualtion
 # Configuration angles in arcsec - At least one angle must be non-zero
 [config_angles]
 wheel1ang_0_arcsec = 187.0
-wheel2ang_0_arcsec = 15.0
+wheel2ang_0_arcsec = 0.0
 wheel3ang_0_arcsec = -123.0
 forkang_arcsec  = 18.0
 omegaVAXang_arcsec = -40.0

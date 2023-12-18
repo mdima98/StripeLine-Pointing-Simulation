@@ -226,6 +226,25 @@ function get_coord_err(dirs_ideal, dirs_real, units)
     return colat_err, long_err
 
 end
+"""
+This function computes the centroid coordinates and scanning radius for a hist2d.
+"""
+function get_centroid_radius(hist2d)
+
+    colat_max = maximum(getfield.(collect(keys(hist2d)), 1))
+    colat_min = minimum(getfield.(collect(keys(hist2d)), 1))
+
+    long_max = maximum(getfield.(collect(keys(hist2d)), 2))
+    long_min = minimum(getfield.(collect(keys(hist2d)), 2))
+
+    colat_c = colat_min + (colat_max-colat_min)/2.
+    long_c = long_min + (long_max-long_min)/2.
+
+    r_scan = (colat_max - colat_c + long_max - long_c) / 2.
+
+    return colat_c, long_c, r_scan
+
+end
 
 function get_stats!(hist, hist2d, stats)
 
