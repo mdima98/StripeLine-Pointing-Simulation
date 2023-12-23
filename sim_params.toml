@@ -11,7 +11,9 @@ day_duration_s = 86401.0   # Day duration in seconds, for ground coords in genpo
 datadir = "hist_tests/"   # Directory to save simulation results
 units = "arcsec"   # Units for histogram making - Choose between "deg", "arcmin", "arcsec", "10 arcsec", "5 arcsec"
 cleardir = false   # Clear already existing results directories - WARNING for using it with parallel
-progressbar = false   # Show a progress bar during the simualtion 
+progressbar = false   # Show a progress bar during the simualtion
+correct_azimuth = false # Apply the azimuth projection correction for grounds coordinates
+map_save = true # Compute the map making process
 # ==========================================================
 
 

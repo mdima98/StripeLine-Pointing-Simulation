@@ -138,7 +138,7 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
         dirs_ideal_eq, dirs_real_eq = sim_equatorial(pol_or, day_time_range, day, config_ang)
         dirs_ideal_gr, dirs_real_gr = sim_ground(pol_or, day_time_range, config_ang, params["day_duration_s"])
 
-        fill_hist!(dirs_ideal_eq, dirs_real_eq, dirs_ideal_gr, dirs_real_gr, hist, hist2d_eq, hist2d_gr, params["units"])
+        fill_hist!(dirs_ideal_eq, dirs_real_eq, dirs_ideal_gr, dirs_real_gr, hist, hist2d_eq, hist2d_gr, params["units"], params["correct_azimuth"])
 
         if params["progressbar"]
             next!(p)

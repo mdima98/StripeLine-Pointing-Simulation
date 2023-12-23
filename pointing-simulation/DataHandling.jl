@@ -100,7 +100,7 @@ function parse_param_file(param_file, parsed_args)
     # Assert available angular units
     if params["units"] ∉ ["deg", "arcmin", "arcsec", "5 arcsec", "10 arcsec" ]
         printstyled("Error: units '$(params["units"])' in parameters file '$(param_file)' does not match any available units.\n", color=:red)
-        printstyled("Available units: [deg arcmin arcsec darcsec]\n", color=:yellow)
+        printstyled("Available units: [deg arcmin arcsec 5 arcsec 10 arcsec]\n", color=:yellow)
         exit(-1)
     end
 
@@ -156,7 +156,7 @@ end
 """
 This function rounds the pointing error and the dirs (ground and Equatorial) from genpointings to integer units of `unit`, and fills the dictonary `hist` and `hist2d`.
 """
-function fill_hist!(dirs_ideal_eq, dirs_real_eq, dirs_ideal_gr, dirs_real_gr, hist, hist2d_eq, hist2d_gr, unit)
+function fill_hist!(dirs_ideal_eq, dirs_real_eq, dirs_ideal_gr, dirs_real_gr, hist, hist2d_eq, hist2d_gr, unit, correct_azimuth)
 
     units = Dict(
         "deg" => 1.,
@@ -168,7 +168,7 @@ function fill_hist!(dirs_ideal_eq, dirs_real_eq, dirs_ideal_gr, dirs_real_gr, hi
     
     point_err = get_point_err(dirs_ideal_eq, dirs_real_eq, units[unit])
     colat_eq_err, long_eq_err = get_coord_err(dirs_ideal_eq, dirs_real_eq, units[unit])
-    colat_gr_err, long_gr_err = get_coord_err(dirs_ideal_gr, dirs_real_gr, units[unit])
+    colat_gr_err, long_gr_err = get_coord_err(dirs_ideal_gr, dirs_real_gr, units[unit]; correct_azimuth)
 
 
     # Update hist dicts
@@ -204,7 +204,7 @@ end
 """
 This function computes the coordinates error.
 """
-function get_coord_err(dirs_ideal, dirs_real, units)
+function get_coord_err(dirs_ideal, dirs_real, units; correct_azimuth = false)
 
     dirs_ideal_deg = rad2deg.(dirs_ideal)
     dirs_real_deg = rad2deg.(dirs_real)
@@ -218,6 +218,11 @@ function get_coord_err(dirs_ideal, dirs_real, units)
     # Compute angular diff and err
     colat_err = angle_diff.(colat_ideal, colat_real)
     long_err = angle_diff.(long_ideal, long_real)
+
+    # Apply azimuth correction
+    if correct_azimuth
+        long_err .*= sin.( deg2rad.(20.) .+ deg2rad.(colat_err) )
+    end
 
     # Scale and rounds results
     colat_err = round.(Int64, colat_err./units)
