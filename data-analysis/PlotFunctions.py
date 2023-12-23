@@ -46,14 +46,13 @@ def plot_hist2d(specifics, fhist2d, options):
     hist2d = pd.read_csv(fhist2d, names=["colat", "long", "freq"],
                          header=None, usecols=usecols).dropna()
     
-    if options["ground"]:
-        hist2d.long *= np.sin(np.deg2rad(20.))
-    
-    
+    # if options["ground"]:
+    #     hist2d["long"] *= np.sin(np.deg2rad(20. + hist2d.colat/3600.))
+    #     hist2d = hist2d.astype("int")
+    #     hist2d = hist2d.groupby(['colat', 'long'], as_index=False).sum()
     
     freq_max = hist2d["freq"].values.max()
     freq_min = hist2d["freq"].values.min()
-    
     
     # Set plot axis limits
     colat_low = hist2d['colat'].values.min()
@@ -97,7 +96,10 @@ def plot_hist2d(specifics, fhist2d, options):
     cbar = fig.colorbar(g, label="Count")
 
     # Set labels    
-    title = f"Angular Error Distribution ({specifics['polarimeter']})"
+    if options["ground"]:
+        title = f"Angular Error Distribution in ground coordinates ({specifics['polarimeter']})"
+    else:
+         title = f"Angular Error Distribution in sky coordinates ({specifics['polarimeter']})"
     ax.set_title(title)
     
     xlabel =  f"Zenithal Distance Error [{specifics['units']}]" if options["ground"] else f"Colatitude Error [{specifics['units']}]"
