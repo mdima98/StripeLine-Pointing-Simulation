@@ -288,6 +288,19 @@ function get_stats!(hist, hist2d, stats)
 
 end
 
+function save_map(pix_idx_ideal, tod_real, num_of_pixels, specifics, params)
+
+    # Set map dir
+    sim_dir_map = set_sim_dir(params["datadir"], "maps", specifics["polarimeter"], params["cleardir"])
+    fname_map = "map_$(specifics["polarimeter"])_$(specifics["start_day"])_$(specifics["start_day"]+specifics["ndays"]).fits"
+    fpath_map = joinpath(sim_dir_map, fname_map)
+
+    # Save map
+    mapfile = Healpix.HealpixMap{Float64, Healpix.RingOrder}(params["nside"])
+    mapfile.pixels = Stripeline.tod2map_mpi(pix_idx_ideal, tod_real, num_of_pixels; comm=nothing)
+    Healpix.saveToFITS(mapfile, fpath_map, typechar = "D")
+end
+
 function save_results(specifics, results, params)
 
     # Set dirs and filepaths

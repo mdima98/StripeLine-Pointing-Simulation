@@ -46,6 +46,7 @@ def plot_hist2d(specifics, fhist2d, options):
     hist2d = pd.read_csv(fhist2d, names=["colat", "long", "freq"],
                          header=None, usecols=usecols).dropna()
     
+    # Apply azimuth correction (check if not already done in simulation)
     if options["ground"]:
         hist2d["long"] *= np.sin(np.deg2rad(20.0 + hist2d.colat/3600.))
         hist2d = hist2d.astype("int")

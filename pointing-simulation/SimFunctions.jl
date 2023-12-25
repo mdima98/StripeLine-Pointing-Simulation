@@ -1,8 +1,8 @@
 using Stripeline
-using Printf
 using Dates
 using Statistics
 using ProgressMeter
+using Healpix
 
 
 # # =========================
@@ -103,6 +103,28 @@ function sim_equatorial(pol_or, day_time_range, day, config_ang)
     
 end
 
+function get_pix_idx_tod(dirs_ideal_eq, dirs_real_eq, inputmap, inputmap_resol, resol)
+
+    # Scan input map for partial real tod
+    partial_pix_idx_inputmap_real = Healpix.ang2pixRing.(
+        Ref(inputmap_resol),
+        dirs_real_eq[:, 1],
+        dirs_real_eq[:, 2]
+    )
+
+    partial_tod = inputmap.pixels[partial_pix_idx_inputmap_real]
+
+    # Get ideal pix idx
+    partial_pix_idx_ideal = Healpix.ang2pixRing.(
+        Ref(resol),
+        dirs_ideal_eq[:, 1],
+        dirs_ideal_eq[:, 2]
+    )
+
+    return partial_tod, partial_pix_idx_ideal 
+
+end
+
 
 function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays, polarimeter)
     
@@ -125,6 +147,16 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
     hist2d_eq = Dict{Tuple{Int64,Int64}, Int64}()
     hist2d_gr = Dict{Tuple{Int64,Int64}, Int64}()
 
+    # Arrays for sky map
+    pix_idx_ideal = Int64[]
+    tod_real = Float32[]
+
+    # Read input map
+    inputmap = Healpix.readMapFromFITS(params["input_map"], 2 , Float64)
+    inputmap_resol = inputmap.resolution
+
+    resol = Healpix.Resolution(params["nside"]) 
+    num_of_pixels = resol.numOfPixels
 
     # Set progress meter
     if params["progressbar"]
@@ -138,7 +170,11 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
         dirs_ideal_eq, dirs_real_eq = sim_equatorial(pol_or, day_time_range, day, config_ang)
         dirs_ideal_gr, dirs_real_gr = sim_ground(pol_or, day_time_range, config_ang, params["day_duration_s"])
 
+        partial_tod, partial_pix_idx_ideal = get_pix_idx_tod(dirs_ideal_eq, dirs_real_eq, inputmap, inputmap_resol, resol)
         fill_hist!(dirs_ideal_eq, dirs_real_eq, dirs_ideal_gr, dirs_real_gr, hist, hist2d_eq, hist2d_gr, params["units"], params["correct_azimuth"])
+
+        tod_real = append!(tod_real, partial_tod)
+        pix_idx_ideal = append!(pix_idx_ideal, partial_pix_idx_ideal)
 
         if params["progressbar"]
             next!(p)
@@ -175,6 +211,7 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
     )
 
     save_results(specifics, results, params)
+    save_map(pix_idx_ideal, tod_real, num_of_pixels, specifics, params)
 
     if params["progressbar"]
         finish!(p)

@@ -12,8 +12,10 @@ datadir = "hist_tests/"   # Directory to save simulation results
 units = "arcsec"   # Units for histogram making - Choose between "deg", "arcmin", "arcsec", "10 arcsec", "5 arcsec"
 cleardir = false   # Clear already existing results directories - WARNING for using it with parallel
 progressbar = false   # Show a progress bar during the simualtion
-correct_azimuth = false # Apply the azimuth projection correction for grounds coordinates
-map_save = true # Compute the map making process
+correct_azimuth = true # Apply the azimuth projection correction for grounds coordinates
+map_save = true # Do map making process
+input_map = "PySM_inputmap_nside256.fits" # Input map file
+nside = 256 # NSIDE for the input map
 # ==========================================================
 
 
