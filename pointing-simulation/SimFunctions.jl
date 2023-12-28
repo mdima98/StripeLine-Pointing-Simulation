@@ -112,7 +112,16 @@ function get_pix_idx_tod(dirs_ideal_eq, dirs_real_eq, inputmap, inputmap_resol, 
         dirs_real_eq[:, 2]
     )
 
-    partial_tod = inputmap.pixels[partial_pix_idx_inputmap_real]
+    partial_tods = Dict(
+            "I" => Float64[],
+            "Q" => Float64[],
+            "U" => Float64[]
+        )
+
+    partial_tods["I"] = inputmap.i.pixels[partial_pix_idx_inputmap_real]
+    partial_tods["Q"] = inputmap.q.pixels[partial_pix_idx_inputmap_real]
+    partial_tods["U"] = inputmap.u.pixels[partial_pix_idx_inputmap_real]
+
 
     # Get ideal pix idx
     partial_pix_idx_ideal = Healpix.ang2pixRing.(
@@ -121,7 +130,7 @@ function get_pix_idx_tod(dirs_ideal_eq, dirs_real_eq, inputmap, inputmap_resol, 
         dirs_ideal_eq[:, 2]
     )
 
-    return partial_tod, partial_pix_idx_ideal 
+    return partial_tods, partial_pix_idx_ideal 
 
 end
 
@@ -150,15 +159,19 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
     # Map making 
     if params["map_save"]
         # Read input map
-        inputmap = Healpix.readMapFromFITS(params["input_map"], 2 , Float64)
-        inputmap_resol = inputmap.resolution
+        inputmap = Healpix.readPolarizedMapFromFITS(params["input_map"], 1, Float32)
+        inputmap_resol = inputmap.i.resolution
 
         resol = Healpix.Resolution(params["nside"]) 
         num_of_pixels = resol.numOfPixels
 
         # Arrays for sky map
         pix_idx_ideal = Int64[]
-        tod_real = Float32[]
+        tods_real = Dict(
+            "I" => Float32[],
+            "Q" => Float32[],
+            "U" => Float32[]
+        )
     end
 
     # Set progress meter
@@ -174,8 +187,12 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
         dirs_ideal_gr, dirs_real_gr = sim_ground(pol_or, day_time_range, config_ang, params["day_duration_s"])
 
         if params["map_save"]
-            partial_tod, partial_pix_idx_ideal = get_pix_idx_tod(dirs_ideal_eq, dirs_real_eq, inputmap, inputmap_resol, resol)
-            tod_real = append!(tod_real, partial_tod)
+            tods_partial, partial_pix_idx_ideal = get_pix_idx_tod(dirs_ideal_eq, dirs_real_eq, inputmap, inputmap_resol, resol)
+            
+            # Append save this day results
+            tods_real["I"] = append!(tods_real["I"], tods_partial["I"])
+            tods_real["Q"] = append!(tods_real["Q"], tods_partial["Q"])
+            tods_real["U"] = append!(tods_real["U"], tods_partial["U"])
             pix_idx_ideal = append!(pix_idx_ideal, partial_pix_idx_ideal)
         end
 
@@ -217,7 +234,7 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
 
     save_results(specifics, results, params)
     if params["map_save"]
-       save_map(pix_idx_ideal, tod_real, num_of_pixels, specifics, params) 
+       save_map(pix_idx_ideal, tods_real, num_of_pixels, specifics, params) 
     end
     
 

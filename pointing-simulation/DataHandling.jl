@@ -288,16 +288,32 @@ function get_stats!(hist, hist2d, stats)
 
 end
 
-function save_map(pix_idx_ideal, tod_real, num_of_pixels, specifics, params)
+function save_map(pix_idx_ideal, tods_real, num_of_pixels, specifics, params)
 
-    # Set map dir
+    # Set map directory
     sim_dir_map = set_sim_dir(params["datadir"], "maps", specifics["polarimeter"], params["cleardir"])
     fname_map = "map_$(specifics["polarimeter"])_$(specifics["start_day"])_$(specifics["start_day"]+specifics["ndays"]).fits"
     fpath_map = joinpath(sim_dir_map, fname_map)
 
-    # Save map
-    mapfile = Healpix.HealpixMap{Float64, Healpix.RingOrder}(params["nside"])
-    mapfile.pixels = Stripeline.tod2map_mpi(pix_idx_ideal, tod_real, num_of_pixels; comm=nothing)
+    # Remove already existing map
+    if ispath(fpath_map)
+        rm(fpath_map)
+    end
+
+    # I map
+    I_map = Healpix.HealpixMap{Float64, Healpix.RingOrder}(params["nside"])
+    I_map.pixels = Stripeline.tod2map_mpi(pix_idx_ideal, tods_real["I"], num_of_pixels; comm=nothing)
+
+    # Q map
+    Q_map = Healpix.HealpixMap{Float64, Healpix.RingOrder}(params["nside"])
+    Q_map.pixels = Stripeline.tod2map_mpi(pix_idx_ideal, tods_real["Q"], num_of_pixels; comm=nothing)
+
+    # U map
+    U_map = Healpix.HealpixMap{Float64, Healpix.RingOrder}(params["nside"])
+    U_map.pixels = Stripeline.tod2map_mpi(pix_idx_ideal, tods_real["U"], num_of_pixels; comm=nothing)
+
+    # Polarized map
+    mapfile = Healpix.PolarizedHealpixMap(I_map, Q_map, U_map)
     Healpix.saveToFITS(mapfile, fpath_map, typechar = "D")
 end
 
