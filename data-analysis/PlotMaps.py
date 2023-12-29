@@ -24,16 +24,17 @@ def main():
     
     diff_map = (sky - fmap) * 1e6
     
-    fig = plt.figure(figsize=(6,4), constrained_layout=True)
+    # fig = plt.figure(figsize=(6,4), constrained_layout=True)
     
     hp.mollview(
-    fig=fig,
-    map=diff_map[2],
+    map=diff_map[1],
     unit=r"$\mu$K",
     title="Q Component difference"
     )
     
     hp.graticule()
+    
+    # plt.hist(diff_map[2], bins=50, histtype="step", color=COLORS["palatinate-blue"])
     
     # plt.savefig(SAVEPATH+"Q_difference.pdf", dpi=600, format="pdf")
 
