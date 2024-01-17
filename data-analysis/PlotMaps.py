@@ -9,7 +9,7 @@ def main():
     pol = "I0"
     datadir = "hist_tests"
     start_day = 0
-    ndays = 1
+    ndays = 10
     end_day = start_day+ndays
     
     map_name = f"map_{pol}_{start_day}_{end_day}.fits"
@@ -26,6 +26,8 @@ def main():
     
     # fig = plt.figure(figsize=(6,4), constrained_layout=True)
     
+    plt.hist(diff_map[2], bins=50, histtype="step", color=COLORS["palatinate-blue"])
+    
     hp.mollview(
     map=diff_map[1],
     unit=r"$\mu$K",
@@ -34,7 +36,7 @@ def main():
     
     hp.graticule()
     
-    # plt.hist(diff_map[2], bins=50, histtype="step", color=COLORS["palatinate-blue"])
+    
     
     # plt.savefig(SAVEPATH+"Q_difference.pdf", dpi=600, format="pdf")
 

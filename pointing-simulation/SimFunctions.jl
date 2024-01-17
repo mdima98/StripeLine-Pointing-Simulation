@@ -112,15 +112,15 @@ function get_pix_idx_tod(dirs_ideal_eq, dirs_real_eq, inputmap, inputmap_resol, 
         dirs_real_eq[:, 2]
     )
 
-    partial_tods = Dict(
+    partial_tods_real = Dict(
             "I" => Float64[],
             "Q" => Float64[],
             "U" => Float64[]
         )
 
-    partial_tods["I"] = inputmap.i.pixels[partial_pix_idx_inputmap_real]
-    partial_tods["Q"] = inputmap.q.pixels[partial_pix_idx_inputmap_real]
-    partial_tods["U"] = inputmap.u.pixels[partial_pix_idx_inputmap_real]
+    partial_tods_real["I"] = inputmap.i.pixels[partial_pix_idx_inputmap_real]
+    partial_tods_real["Q"] = inputmap.q.pixels[partial_pix_idx_inputmap_real]
+    partial_tods_real["U"] = inputmap.u.pixels[partial_pix_idx_inputmap_real]
 
 
     # Get ideal pix idx
@@ -130,7 +130,7 @@ function get_pix_idx_tod(dirs_ideal_eq, dirs_real_eq, inputmap, inputmap_resol, 
         dirs_ideal_eq[:, 2]
     )
 
-    return partial_tods, partial_pix_idx_ideal 
+    return partial_tods_real, partial_pix_idx_ideal 
 
 end
 
@@ -168,9 +168,9 @@ function simulate_pointing(params, config_ang_dict, config_ang, start_day, ndays
         # Arrays for sky map
         pix_idx_ideal = Int64[]
         tods_real = Dict(
-            "I" => Float32[],
-            "Q" => Float32[],
-            "U" => Float32[]
+            "I" => Float64[],
+            "Q" => Float64[],
+            "U" => Float64[]
         )
     end
 

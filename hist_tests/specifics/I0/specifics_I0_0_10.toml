@@ -1,0 +1,26 @@
+long_c_eq = 1.0
+ndays = 10
+polarimeter = "I0"
+colat_c_gr = 214.0
+start_day = 0
+r_scan_eq = 244.5
+datadir = "hist_tests/"
+results_hist2d = "hist2d_I0_0_10.csv"
+last_day = 2025-01-11T15:00:00.000Z
+colat_c_eq = 0.0
+long_c_gr = 65.5
+r_scan_gr = 15.75
+units = "arcsec"
+results_hist = "hist_I0_0_10.csv"
+first_day = 2025-01-01T15:00:00.000Z
+
+[config_ang]
+tiltang_arcsec = -176.0
+wheel1ang_0_arcsec = 187.0
+wheel3ang_0_arcsec = -3.0
+zVAXang_arcsec = -16.0
+wheel2ang_0_arcsec = 38.0
+rollang_arcsec = 102.0
+panang_arcsec = 50.0
+forkang_arcsec = 0.56
+omegaVAXang_arcsec = -40.0
