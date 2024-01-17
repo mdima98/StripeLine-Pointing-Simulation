@@ -13,28 +13,44 @@ def figsize(scale):
     fig_size = [fig_width,fig_height]
     return fig_size
 
-
-# plt.rcParams.update({
-#     "pgf.texsystem": "pdflatex",
-#     'text.usetex': True,         # use LaTeX to write all text
-#     'pgf.rcfonts': False,
-#     'font.family': 'serif',
-#     "font.serif": ["Latin Modern"],                   # blank entries should cause plots to inherit fonts from the document
-#     "font.sans-serif": [],
-#     "font.monospace": [],
-#     "axes.labelsize": 11,               # LaTeX default is 10pt font.
-#     "font.size": 11,
-#     "legend.fontsize": 9,               # Make the legend/label fonts a little smaller
-#     "xtick.labelsize": 9,
-#     "ytick.labelsize": 9,
-#     "figure.figsize": figsize(0.9),     # default fig size of 0.9 textwidth
-#     "figure.constrained_layout.use": True, # enable costrained layout on plots
-#     "pgf.preamble": "\n".join([
-#         r"\usepackage[utf8x]{inputenc}",     # use utf8 fonts becasue your computer can handle it :)
-#         r"\usepackage[T1]{fontenc}",
-#         r"\usepackage{lmodern}",
-#      ]),
-# })
+latex_plot = False
+if latex_plot:
+    plt.rcParams.update({
+        "pgf.texsystem": "pdflatex",
+        'text.usetex': True,         # use LaTeX to write all text
+        'pgf.rcfonts': False,
+        'font.family': 'serif',
+        "font.serif": ["Latin Modern"],                   # blank entries should cause plots to inherit fonts from the document
+        "font.sans-serif": [],
+        "font.monospace": [],
+        "axes.labelsize": 11,               # LaTeX default is 10pt font.
+        "axes.titlesize": 11,
+        "figure.titlesize": 11,
+        "font.size": 11,
+        "legend.fontsize": 9,               # Make the legend/label fonts a little smaller
+        # TICKS
+        "xtick.labelsize": 9,
+        "xtick.major.size": 4.0,
+        "xtick.major.width": 1.0,
+        "ytick.minor.width": 0.5,
+        "xtick.minor.visible": True,
+        "ytick.labelsize": 9,
+        "ytick.major.size": 4.0,
+        "xtick.major.width": 1.0,
+        "ytick.minor.width": 0.5,
+        "ytick.minor.visible": True,
+        # MARKERS
+        "lines.markersize": 4,
+        # FIGURE
+        "figure.figsize": figsize(0.9),     # default fig size of 0.9 textwidth
+        "figure.constrained_layout.use": True, # enable costrained layout on plots
+        # FONTS
+        "pgf.preamble": "\n".join([
+            r"\usepackage[utf8x]{inputenc}",     # use utf8 fonts becasue your computer can handle it :)
+            r"\usepackage[T1]{fontenc}",
+            r"\usepackage{lmodern}",
+        ]),
+    })
 
 SAVEPATH = "../plots-images/"
 
@@ -54,5 +70,7 @@ COLORS = {
     "medium-blue": "#0000CD",
     "navy-blue": "#000080",
     "klein-blue": "#002FA7",
-    "palatinate-blue": "#273BE2"
+    "palatinate-blue": "#273BE2",
+    "apple-candy-red": "#FF0400",
+    "dim-gray": "#696969"
 }
