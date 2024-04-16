@@ -133,6 +133,11 @@ def parse_commandline_plots():
                         help="Enable this option to plot combined histograms."
                         )
     
+    parser.add_argument("-b", "--both",
+                        action="store_true",
+                        help="Plot ground and equatorial hist2d in same figure."
+                        )
+    
     args = parser.parse_args()
 
     return args

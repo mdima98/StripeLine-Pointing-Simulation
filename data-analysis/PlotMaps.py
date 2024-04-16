@@ -24,24 +24,62 @@ def main():
     
     diff_map = (sky - fmap) * 1e6
     
-    # fig = plt.figure(figsize=(6,4), constrained_layout=True)
-    
-    plt.hist(diff_map[2], bins=50, histtype="step", color=COLORS["palatinate-blue"])
+    fig, axs = plt.subplots(1,1, figsize=figsize(1.1))
+        
+    cmap_planck = get_planck_colormap()
     
     hp.mollview(
-    map=diff_map[1],
+    fig=fig.number,
+    map= sky[2] * 1e6,
     unit=r"$\mu$K",
-    title="Q Component difference"
+    cmap=cmap_planck,
+    notext=True,
+    title="",
+    hold=True
     )
     
+    # plt.axes(axs[0])
+    # hp.mollview(
+    # fig=fig.number,
+    # map=sky[1] * 1e6,
+    # unit=r"$\mu$K",
+    # cmap="Spectral_r",
+    # notext=True,
+    # title="Q",
+    # hold=True
+    # )
+    
+    
+    # plt.axes(axs[1])
+    # hp.mollview(
+    # fig=fig.number,
+    # map=sky[2] * 1e6,
+    # unit=r"$\mu$K",
+    # cmap="Spectral_r",
+    # notext=True,
+    # title="U",
+    # hold=True
+    # )
+
     hp.graticule()
-    
-    
-    
-    # plt.savefig(SAVEPATH+"Q_difference.pdf", dpi=600, format="pdf")
+
+    savefig("sky_U")
 
     plt.show()
     
+
+
+
+def get_planck_colormap():
+    ############### CMB colormap
+    from matplotlib.colors import ListedColormap
+    colombi1_cmap = ListedColormap(np.loadtxt("data-analysis/Planck_Parchment_RGB.txt")/255.)
+    colombi1_cmap.set_bad("gray") # color of missing pixels
+    colombi1_cmap.set_under("white") # color of background, necessary if you want to use
+    # this colormap directly with hp.mollview(m, cmap=colombi1_cmap)
+    cmap = colombi1_cmap
+    
+    return cmap
 
 
 

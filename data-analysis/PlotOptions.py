@@ -13,7 +13,15 @@ def figsize(scale):
     fig_size = [fig_width,fig_height]
     return fig_size
 
-latex_plot = False
+def figsize_square(scale):
+    fig_width_pt = 452.9679                         # Get this from LaTeX using \the\textwidth
+    inches_per_pt = 1.0/72.27                       # Convert pt to inch
+    fig_width = fig_width_pt*inches_per_pt*scale    # width in inches
+    fig_height = fig_width              # height in inches
+    fig_size = [fig_width,fig_height]
+    return fig_size
+
+latex_plot = True
 if latex_plot:
     plt.rcParams.update({
         "pgf.texsystem": "pdflatex",
@@ -44,15 +52,16 @@ if latex_plot:
         # FIGURE
         "figure.figsize": figsize(0.9),     # default fig size of 0.9 textwidth
         "figure.constrained_layout.use": True, # enable costrained layout on plots
+        "savefig.bbox": "tight", # tight bbox
         # FONTS
         "pgf.preamble": "\n".join([
-            r"\usepackage[utf8x]{inputenc}",     # use utf8 fonts becasue your computer can handle it :)
+            r"\usepackage[utf8]{inputenc}",     # use utf8 fonts becasue your computer can handle it :)
             r"\usepackage[T1]{fontenc}",
             r"\usepackage{lmodern}",
         ]),
     })
 
-SAVEPATH = "../plots-images/"
+SAVEPATH = "../master-thesis/graphs/"
 
 def savefig(name):
     fname = SAVEPATH + name + ".svg"

@@ -22,10 +22,10 @@ nside = 256 # NSIDE for the input map
 # ==========================================================
 # Configuration angles in arcsec - At least one angle must be non-zero
 [config_angles]
-wheel1ang_0_arcsec = 187.0
-wheel2ang_0_arcsec = 38.0
-wheel3ang_0_arcsec = -3.0
-forkang_arcsec  = 0.56
+wheel1ang_0_arcsec = 3.0
+wheel2ang_0_arcsec = 187.0
+wheel3ang_0_arcsec = -30
+forkang_arcsec  = 65.0
 omegaVAXang_arcsec = -40.0
 zVAXang_arcsec = -16.0
 panang_arcsec = 50.0
